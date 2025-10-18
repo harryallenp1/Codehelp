@@ -1,0 +1,27 @@
+ProgramID,Program,UniversityID,University,Lat,Lon,2020 Employment Rate 6 Months after Graduation,2020 Employment Rate 2 Years after Graduation
+1,Computer Science,1,Carleton University,45.385858,-75.695004,88.7,97.2
+1,Computer Science,2,Guelph University,43.532786,-80.224997,79.4,93.9
+1,Computer Science,3,McMaster University,43.26394,-79.917825,88.9,100
+1,Computer Science,4,Ottawa University,45.422527,-75.68339,75.9,86.2
+1,Computer Science,5,Queens University,44.226349,-76.495756,85.3,90.5
+1,Computer Science,6,Toronto Metropolitan University,43.658534,-79.378467,81.4,87.8
+1,Computer Science,7,University of Toronto,43.663462,-79.39776,85.3,96.6
+1,Computer Science,8,Ontario Tech University,43.948341,-78.898202,66,91.8
+1,Computer Science,9,University of Waterloo,43.470199,-80.545243,90.4,98.8
+1,Computer Science,10,Western University,43.005423,-81.274801,88.2,97.3
+1,Computer Science,11,Wilfrid Laurier University ,43.472799,-80.528086,67.5,93.2
+1,Computer Science,12,University of Windsor,42.305201,-83.066491,64.7,89.2
+1,Computer Science,13,York University,43.774332,-79.50027,67.7,92.2
+2,Business and Commerce,1,Carleton University,45.385858,-75.695004,93.7,99.2
+2,Business and Commerce,2,Guelph University,43.532786,-80.224997,88.4,94
+2,Business and Commerce,3,McMaster University,43.26394,-79.917825,84.9,96.2
+2,Business and Commerce,4,Ottawa University,45.422527,-75.68339,90.3,99
+2,Business and Commerce,5,Queens University,44.226349,-76.495756,95.3,96.2
+2,Business and Commerce,6,Toronto Metropolitan University,43.658534,-79.378467,81.4,93.5
+2,Business and Commerce,7,University of Toronto,43.663462,-79.39776,85.4,97.2
+2,Business and Commerce,8,Ontario Tech University,43.948341,-78.898202,88.4,97.5
+2,Business and Commerce,9,University of Waterloo,43.470199,-80.545243,92.7,97.2
+2,Business and Commerce,10,Western University,43.005423,-81.274801,89.9,96.5
+2,Business and Commerce,11,Wilfrid Laurier University ,43.472799,-80.528086,92.8,97.8
+2,Business and Commerce,12,University of Windsor,42.305201,-83.066491,90.4,94.9
+2,Business and Commerce,13,York University,43.774332,-79.50027,88.7,94.8

@@ -1,0 +1,60 @@
+.mainnav-button {
+    border-radius: 12px;
+    text-align: center;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 30px;
+    font-family: 'Courier New';
+    background-color: #cfd9db;
+    color: rgb(24, 23, 23)
+}
+
+.mainnav-button:hover {
+    background-color: #141614;
+    color: rgb(192, 199, 209)
+   
+}
+
+.mainnav-container {
+    display: flex;
+    justify-content: center;
+    gap: 5px; 
+    padding: 20px;
+    background-color: #E6E7F0;
+    border-radius: 12px;
+    margin: 0 auto;
+    width: 80%;
+    box-shadow: #a5a6ab;
+}
+
+
+.KPI_2_by_2 {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.mainnav-link {
+    display: inline-block;       /* allows margin & padding to work */
+    border-radius: 12px;
+    text-align: center;
+    margin: 20px 10px;
+    padding: 10px 20px;
+    font-size: 30px;
+    font-family: 'Courier New';
+    background-color: #cfd9db;
+    color: rgb(24, 23, 23);
+    text-decoration: none;       /* removes underline */
+    transition: 0.3s;            /* smooth hover */
+}
+
+.mainnav-link:hover {
+    background-color: #141614;
+    color: rgb(192, 199, 209);
+}
+
+.main-header {
+    text-align: center;
+    font-size: 35px;
+    font-family: 'Courier New';
+}
