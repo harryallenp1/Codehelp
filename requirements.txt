@@ -1,0 +1,7 @@
+polars
+numpy
+pandas
+plotly
+dash
+dash-bootstrap-components
+pyarrow

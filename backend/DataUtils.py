@@ -99,6 +99,8 @@ def Get_Latest_ER_NOC_PCT(NOC_Code):
 
         df = df.groupby(['Economic Region']).tail(1)
 
+        df['Monthly PCT'] = pd.to_numeric(df['Monthly PCT'], errors='coerce')
+
         conditions = [
             df['Monthly PCT'] > 0,
             df['Monthly PCT'] < 0,
@@ -107,7 +109,7 @@ def Get_Latest_ER_NOC_PCT(NOC_Code):
 
         choices = ['Lift', 'Drop', 'No Change']
 
-        df['Change'] = np.select(conditions, choices)
+        df['Change'] = np.select(conditions, choices, default='No Change').astype(str)
 
         return df, NOC_Occupation
 
