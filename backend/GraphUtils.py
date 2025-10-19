@@ -156,7 +156,7 @@ def Generate_NOC_History(Data, NOC_Occupation):
         History_Graph = px.line(
             title=f"'{NOC_Occupation}' Employment History in Ontario",
             height=1000,
-            template='ggplot2'
+            template='ggplot2',
         )
 
         History_Graph.add_trace(
@@ -165,7 +165,7 @@ def Generate_NOC_History(Data, NOC_Occupation):
                 y=Data['Employment (Persons in Thousands)'],
                 mode='lines',
                 line=dict(color='#172B4A', width=4.5),
-                name='Empoyment (Persons in Thousands)'
+                name='Empoyment (Persons in Thousands)',
             )
         )
 
@@ -228,7 +228,8 @@ def Generate_NOC_History(Data, NOC_Occupation):
                 xanchor='center',      
                  x=0.5,                 
                 font=dict(size=16)     
-            )
+            ),
+            hovermode='x unified',
         )
 
         return History_Graph
