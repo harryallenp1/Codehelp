@@ -1,13 +1,18 @@
+'''
+This module serves as the utility module for the Dash Application. It makes calls to backend modules 
+DataUtils and GraphUtils to retrieve data and generate graphs for the frontend dashboard.
+'''
+
+
 from backend import DataUtils, GraphUtils
 
-
-# df, Measure, Program = DataUtils.Get_Program_University_Data(ProgramID=1, Metric=1)
-
+#An abstract function for Generating a key pair list for dropdown options in Dash.
 def Generate_Options(KeyDict):
     Options = [{'label':val, 'value':choice} for choice,val in KeyDict.items()]
 
     return Options
 
+#region Functions for Generating Dropdown Options.
 def Get_Program_Options():
     ProgramID_Programs_Dict = DataUtils.Get_Program_Options_Dict()
 
@@ -22,14 +27,10 @@ def Get_Post_Grad_Employment_Rate_Measure_Options():
     Program_Post_Grad_Employment_Rate_Dict = DataUtils.Get_Post_Grad_Employment_Measure_Dict()
 
     return Generate_Options(KeyDict=Program_Post_Grad_Employment_Rate_Dict)
+#endregion
 
 
-
-
-
-# GraphUtils.Graph_Program_University_Post_Grad_Employment_Rate(Program=Program, Measure=Measure, Data=df)
-
-
+#region Function for Program Search Page
 def Generate_KPI_Comparison(Program, KPI):
     try:
         df, Measure, Program = DataUtils.Get_Program_University_Data(ProgramID=Program, Metric=KPI)
@@ -41,8 +42,10 @@ def Generate_KPI_Comparison(Program, KPI):
     except Exception as e:
         print(f'Generate_KPI_Map(Program={Program}, KPI={KPI}) => {e}')
         return {'data': [], 'layout': {'title': f'Post-Grad Employment Rate Data Unavailable for {Program}'}}, {'data': [], 'layout': {'title': f'Post-Grad Employment Rate Data Unavailable for {Program} Bar'}}
-    
 
+#endregion 
+
+#region Functions for the Career Pathways Page.
 def Generate_Program_Pathways(Program):
     try:
         df = DataUtils.Get_Program_Occupation_Data(ProgramID=Program)
@@ -79,3 +82,5 @@ def Generate_NOC_Latest_ER_PCT(NOC_Code):
     except Exception as e:
         print(f"Generate_NOC_Latest_ER_PCT(NOC_Code={NOC_Code}) => {e}")
         return {'data': [], 'layout': {'title': f'NOC Employment History for ERs Unavailable'}}
+
+#endregion

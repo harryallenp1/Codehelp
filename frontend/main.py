@@ -1,3 +1,7 @@
+'''
+This module calls the Generate_Dash_App function to create the Dash application. Once the application is created,
+main will run the app on the specified port.
+'''
 from frontend.DashApp import Generate_Dash_App
 
 

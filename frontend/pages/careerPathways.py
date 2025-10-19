@@ -47,21 +47,6 @@ layout = html.Div(
 
         html.Br(),
 
-        # html.Div(
-        #     children=[
-        #         dcc.Graph(
-        #             id='Graph_NOC_History'
-        #         )
-        #     ]
-        # ),
-
-        # html.Div(
-        #     children=[
-        #         dcc.Graph(
-        #             id='Graph_NOC_ER_History'
-        #         )
-        #     ]
-        # ),
         html.Div(
             style={'display': 'flex', 'justify-content': 'space-between'},
             children=[

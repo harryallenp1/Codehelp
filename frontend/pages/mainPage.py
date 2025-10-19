@@ -17,20 +17,23 @@ layout = html.Div(
                         ],
                         className='main-page-1-1 circle-container',
                         href='/careerPathways',
+                        title='Check out Career Pathways based on Programs'
                         ),
                         dcc.Link(
                             children=[
                             html.Img(src='/assets/icons/trend.png', style={'width':'300px', 'height':'300px'}),
                         ],
                         className='main-page-2-2 circle-container',
-                        href='/occupationForecasts', 
+                        href='/occupationForecasts',
+                        title='View projections for Occupation Employment Rates in Ontario' 
                         ),
                         dcc.Link(
                             children=[
                             html.Img(src='/assets/icons/magnifier.png', style={'width':'300px', 'height':'300px'}),
                         ],
                         className='main-page-3-1 circle-container',
-                        href='/programSearch',                         
+                        href='/programSearch',          
+                        title='Search and Compare University Programs based on KPIs'               
                         ),
         
                 ],
