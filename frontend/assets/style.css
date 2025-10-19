@@ -35,7 +35,7 @@
 
 
 .mainnav-link {
-    display: inline-block;       /* allows margin & padding to work */
+    display: inline-block;       
     border-radius: 12px;
     text-align: center;
     margin: 20px 10px;
@@ -44,8 +44,8 @@
     font-family: 'Courier New';
     background-color: #cfd9db;
     color: rgb(24, 23, 23);
-    text-decoration: none;       /* removes underline */
-    transition: 0.3s;            /* smooth hover */
+    text-decoration: none;       
+    transition: 0.3s;            
 }
 
 .mainnav-link:hover {
@@ -57,4 +57,65 @@
     text-align: center;
     font-size: 35px;
     font-family: 'Courier New';
+}
+
+
+.main_page_grid {
+    display: grid;
+    grid-template-columns: 700px 700px;
+    grid-template-rows: auto auto;
+    justify-items: center;  
+    align-items: center;    
+    height: 100vh;          
+    width: 100%;
+    place-content: center;  
+    gap: 20px;  
+}
+
+.main-page-1-1 {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.main-page-2-2 {
+    grid-column: 1 / span 2;
+    grid-row: 2;
+}
+
+.main-page-3-1 {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.main_page_grid img:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.circle-container {
+    width: auto;
+    height: auto;
+    border-radius: 50%;          
+    background-color: #d0d4d6;   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(25, 40, 115, 0.30); 
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.circle-container:hover {
+    transform: scale(1.08);
+    cursor: pointer;
+    background-color: #115476;  
+    border-color: #ad4a45;
+    border-width: 10px;
+    border-radius: 30%;
+    box-shadow: 0 6px 12px rgba(239, 238, 238, 0.953);
+
+}
+
+.circle-container img {
+     object-fit: cover;    
 }
