@@ -2,7 +2,7 @@
 #This module serves as helper to make API calls to the DataLayer endpoints
 #It define functions and parameter to send to API and returns the relevant information in forms of dataframes. 
 #This helps seperate out the data retrievel mechanism to a single module that can
-
+print(f"Importing Data Service API")
 import polars as pl
 import pandas as pd
 import httpx
@@ -16,7 +16,8 @@ api_routes = {
     4: 'provincial_noc_group_labor_statistic',
     5: 'noc_grouping',
     6: 'economic_region_employment_estimate',
-    7: 'economicregion'
+    7: 'economicregion',
+    8: 'province'
 }
 
 #Instantiating a Client that will attempt to make requests and will the connection if a response doesnt come back in atleast 30 seconds.
@@ -123,4 +124,17 @@ async def RequestEconomicRegionEmploymentEstimate(NOC_GroupingID: int, ProvinceI
         print(f'RequestEconomicRegionEmploymentEstimate(NOC_GroupingID={NOC_GroupingID}) => {e}')
         return pd.DataFrame()
 
+#Requestion Proving Options 
+async def RequestProvince() -> pd.DataFrame:
+    try:
+        url_to_call = f"{base_uri}{api_routes[8]}/"
+        data = await Make_Request(url=url_to_call)
+        return pd.DataFrame(data)
+    except Exception as e:
+        print(f'RequestProvince()  => {e}')
+        return pd.DataFrame()
+
+
 #endregion 
+
+
