@@ -8,3 +8,4 @@ pyarrow
 django-filter
 django 
 djangorestframework
+uvicorn

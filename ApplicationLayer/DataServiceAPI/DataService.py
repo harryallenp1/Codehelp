@@ -21,7 +21,7 @@ api_routes = {
 }
 
 #Instantiating a Client that will attempt to make requests and will the connection if a response doesnt come back in atleast 30 seconds.
-client = httpx.AsyncClient(timeout=30.0)
+client = httpx.AsyncClient(timeout=120.0)
 
 #Generic Function for making a request to the API given a formatted URL f-string 
 async def Make_Request(url: str):
