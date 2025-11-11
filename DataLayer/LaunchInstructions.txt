@@ -1,0 +1,3 @@
+After navigating to this folder, follow these steps: 
+1. Open a CMD Terminal 
+2. Command: python manage.py runserver
