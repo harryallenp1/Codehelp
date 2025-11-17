@@ -15,7 +15,7 @@ On Mac: Open Command Terminal
 1. Command: brew install python3
 2. Navigate to project folder. 
 3. Command: pip3 install -r requirements.text 
-4. Command: python -m frontend.main
+4. Command: python3 -m frontend.main
 5. Open http://127.0.0.1:8519/
 
 On Windows: 
