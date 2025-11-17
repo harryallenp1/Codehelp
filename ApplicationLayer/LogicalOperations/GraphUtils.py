@@ -44,10 +44,6 @@ def Graph_Program_University_Post_Grad_Employment_Rate_Map(Program, Measure, Dat
 
         del Data
 
-        # pio.write_html(scatter_map, 'Check.html',auto_open=True)
-
-        pio.write_html(scatter_map, 'Map_Test.html', auto_open=True)
-
         return scatter_map
 
 

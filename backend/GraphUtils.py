@@ -18,7 +18,7 @@ def Graph_Program_University_Post_Grad_Employment_Rate_Map(Program, Measure, Dat
             lat='Lat',
             lon='Lon',
             height=900,
-            size=Measure,
+            size=Measure, 
             color=Measure,
             color_continuous_scale=['#692618','#183B69','#186930'],
             text='University',
