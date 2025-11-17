@@ -237,9 +237,9 @@ def Generate_NOC_ER_Stat(Data, NOC_Occupation):
 
 
         Color_Discrete_Map = {
-            'Lift':'#186930',
+            'Increase':'#186930',
             'No Change':'#183B69',
-            'Drop': '#692618'
+            'Decrease': '#692618'
         }
 
         Bar = px.bar(

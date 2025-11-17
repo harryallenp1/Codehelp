@@ -7,7 +7,7 @@ On Linux: Open Command Terminal
 1. Command: install python3 
 2. Navigate to project folder. 
 3. Command: pip install -r requirements.text 
-4. Command: python -m frontend.main
+4. Command: python -m UILayer.main
 5. Open http://127.0.0.1:8519/
 
 
@@ -15,7 +15,7 @@ On Mac: Open Command Terminal
 1. Command: brew install python3
 2. Navigate to project folder. 
 3. Command: pip3 install -r requirements.text 
-4. Command: python3 -m frontend.main
+4. Command: python3 -m UILayer.main
 5. Open http://127.0.0.1:8519/
 
 On Windows: 
@@ -23,7 +23,7 @@ On Windows:
 --Open Command Terminal 
 2. Navigate to project folder. 
 3. Command: pip3 install -r requirements.text 
-4. Command: python -m frontend.main
+4. Command: python -m UILayer.main
 5. Open http://127.0.0.1:8519/
 
 
@@ -42,7 +42,11 @@ data to the user.
     DataServiceAPI: Used to make API calls to the API served by the DataLayer 
     LogicalOperations: Holds the codes that encomposes the logical processing of the data.
         Modules => 
-        OptionsUtilis.py: Used to on dashboard launch to get all dropdown selection options.
-        DataUtilis.py: Used for data manipulation and pre-processing after getting through the DataServiceAPI folder.
-        GraphUtilis.py: Graphical functions that generate interactive visualizations. 
+        OptionsUtils.py: Used to on dashboard launch to get all dropdown selection options.
+        DataUtils.py: Used for data manipulation and pre-processing after getting through the DataServiceAPI folder.
+        GraphUtils.py: Graphical functions that generate interactive visualizations. 
 
+UILayer
+    DashApp.py => Navigational Hub 
+    main.py => Executable that launches the app. 
+    DashAppUtilities.py => Module that bridges the helper functions from the Application Layer

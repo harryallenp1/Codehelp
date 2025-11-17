@@ -88,13 +88,15 @@ WSGI_APPLICATION = 'DataLayer.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 #This is where we declare the database and engine method. 
+db_path = os.path.join(os.path.dirname(BASE_DIR), 'EducationPlanningDB.db')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(os.path.dirname(BASE_DIR), 'EducationPlanningDB.db'),
+        'NAME': db_path,
     }
 }
 
+print(db_path)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
