@@ -51,6 +51,15 @@ def Get_NOC_Historical_Data(NOC_GroupingID,DGUID):
 def Get_Latest_ER_NOC_PCT(NOC_GroupingID, provinceID):
     try:
         df = DataService.RequestEconomicRegionEmploymentEstimate(NOC_GroupingID=NOC_GroupingID, provinceID=provinceID)
+        
+        df['employment_pct_change'] = pd.to_numeric(df['employment_pct_change'], errors='coerce')
+        conditions = [
+            df['employment_pct_change'] > 0,
+            df['employment_pct_change'] < 0,
+            df['employment_pct_change'] == 0
+        ]
+        choices = ['Increase', 'Decrease', 'No Change']
+        df['Change'] = pd.np.select(conditions, choices, default='No Data').astype(str)
 
         return df
 
