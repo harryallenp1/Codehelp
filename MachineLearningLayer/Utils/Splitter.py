@@ -7,14 +7,14 @@ class Splitter():
     
     def Get_Training_Set(self, validateStart):
         try:
-            trainSet = self.Data[self.Data['Year'] < validateStart]
+            trainSet = self.Data[self.Data['year'] < validateStart]
             return trainSet
         except:
             return pd.DataFrame()
     
     def Get_Validation_Set(self, validateStart,testStart):
         try:
-            validateSet = self.Data[(self.Data >= validateStart) & (self.Data['Year'] < testStart)]
+            validateSet = self.Data[(self.Data['year'] >= validateStart) & (self.Data['year'] < testStart)]
             return validateSet
 
         except: 
@@ -22,7 +22,7 @@ class Splitter():
     
     def Get_Test_Set(self, testStart):
         try:
-            testSet = self.Data[self.Data['Year'] >= testStart]
+            testSet = self.Data[self.Data['year'] >= testStart]
             return testSet
         except:
             return pd.DataFrame()

@@ -3,6 +3,11 @@ from MachineLearningLayer.Utils.PreProcessing import PreProcessesor
 import pandas as pd
 import polars as pl
 import warnings
+import os
+from tqdm import tqdm
+tqdm.pandas()
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class Prophet_PreProcessesor(PreProcessesor):
 
@@ -10,6 +15,8 @@ class Prophet_PreProcessesor(PreProcessesor):
         super().__init__()
         self.Data = None
         self.ValidGroups = None
+
+        
 
     def GetData(self):
         Data = DataService.GetAllProvincialNOCHistoricData()
@@ -77,14 +84,17 @@ class Prophet_PreProcessesor(PreProcessesor):
 
         self.Data = self.Data.merge(All_Counts_Copy[['provinceid','noc_groupingid']], on=['provinceid','noc_groupingid'], how='inner')
 
+        self.Data['Key'] = self.Data.progress_apply(lambda x: (x['provinceid'], x['noc_groupingid']), axis=1)
 
     
     def SaveSample(self):
-        return super().SaveSample()
+        self.Data.to_csv(f'{BASE_DIR}/Prophet/Data/PreProcessed_Data.csv',index=False)
     
 
 
 if __name__ == '__main__':
+
+    warnings.filterwarnings('ignore')
 
 
     Processor = Prophet_PreProcessesor()
@@ -121,6 +131,10 @@ if __name__ == '__main__':
     print(f"---Reducing Sample Size---\n")
     Processor.ReduceSampleSize()
     print(f"Data =>\n{Processor.Data}")
+
+    print(f'---Saving File---\n')
+    Processor.SaveSample()
+
 
 
     

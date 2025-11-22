@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-def Tuner(ABC):
+class Tuner(ABC):
     def __init__(self, data, meta_data):
         self.data = data
         self.meta_data = meta_data
