@@ -9,3 +9,5 @@ django-filter
 django 
 djangorestframework
 uvicorn
+prophet
+optuna
