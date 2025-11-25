@@ -51,8 +51,11 @@ class Prophet_Forecaster(Forecaster):
             valforecast = valforecast.merge(validateFull, on='ds')
             testforecast = testforecast.merge(testFull, on='ds')
 
+            valforecast['Set'] = 'Validation'
+            testforecast['Set'] = 'Test'
+
             future = model.make_future_dataframe(
-                periods=48,
+                periods=72,
                 freq='M'
             )
 
@@ -62,10 +65,12 @@ class Prophet_Forecaster(Forecaster):
             Info = validateFull[['Key','provinceid','dguid','noc_groupingid']]
 
             futureforecast['year'] = futureforecast['ds'].dt.year
+            futureforecast = futureforecast[futureforecast['year']>=2025]
 
             futureforecast = futureforecast.merge(Info, on='Key')
 
             futureforecast = futureforecast.drop_duplicates(subset='ds')
+            futureforecast['Set'] = 'Future'
 
 
             forecast_data = pd.concat([valforecast, testforecast, futureforecast], axis=0)
