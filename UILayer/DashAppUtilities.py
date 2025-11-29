@@ -53,6 +53,10 @@ def Get_NOC_Options():
 
     return Generate_Options(KeyDict=NocOptionsDict)
 
+def Get_Province_Options():
+    KeyDict = OptionsUtils.Get_Province_Options()
+    return Generate_Options(KeyDict=KeyDict)
+
 def Get_Post_Grad_Employment_Rate_Measure_Options():
 
     return Generate_Options(KeyDict=Program_Post_Grad_Employment_Rate_Dict)
@@ -138,3 +142,29 @@ def Generate_NOC_Latest_ER_PCT(NOC_GroupingID):
         return {'data': [], 'layout': {'title': f'NOC Employment History for ERs Unavailable'}}
 
 #endregion
+
+
+#region Functions for Future Outcomes Page
+
+def Generate_Forecast_Analysis(provinceid: int, noc_groupingid : int):
+
+    df = DataUtils.Get_Provincial_NOC_Forecast(provinceid=provinceid, noc_groupingid=noc_groupingid)
+
+    df_All = DataUtils.Get_NOC_Forecast_All_Provinces(noc_groupingid=noc_groupingid)
+
+    print(f"All Province Data =>\{df_All}")
+
+    Col_Dict = {str(col): str(col) for col in df_All.columns}
+    Tbl_Dict = DataTableUtils.Generate_Dash_Table(data=df_All, Col_Dict=Col_Dict)
+
+    
+
+
+    
+
+    graph = GraphUtils.Generate_Forecast_Graph(Data=df)
+
+    return graph, Tbl_Dict
+
+
+#endregion 

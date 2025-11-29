@@ -5,7 +5,13 @@
 
 print("Importing Data Service API")
 import pandas as pd
+import polars as pl
 import httpx
+import os 
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+dp_Forecast_Data = pl.scan_parquet(f'{BASE_DIR}/DataServiceAPI/tempData/All_Forecasts.parquet')
 
 base_uri = 'http://127.0.0.1:8000/api/'
 
@@ -153,3 +159,37 @@ def RequestProvince() -> pd.DataFrame:
         return pd.DataFrame()
 
 #endregion
+
+
+
+#region Temporary Functions 
+
+
+def Request_Provincial_NOC_Forecast(provinceID : int, noc_groupingid : int) -> pd.DataFrame:
+    try:
+        Data = dp_Forecast_Data.filter((pl.col('provinceid')==provinceID) & (pl.col('noc_groupingid')==noc_groupingid)).collect().to_pandas().sort_values(by='ds')
+        return Data
+        
+
+    except Exception as e:
+        print(f"Request_Provincial_NOC_Forecast(provinceID : {provinceID}, noc_groupingid : {noc_groupingid}) => {e}")
+        return pd.DataFrame()
+    
+
+def Request_All_Province_NOC_Forecast(noc_groupingid : int) -> pd.DataFrame:
+    try: 
+        Data = dp_Forecast_Data.filter(pl.col('noc_groupingid')==noc_groupingid).group_by(['provinceid','year']).agg(
+            pl.col('yhat').sum().round(2).alias('Employment Forecast')
+        ).collect().to_pandas()
+
+        ProvinceData = RequestProvince()
+
+        Data = Data.merge(ProvinceData[['provinceid','province_shorthand']], how='left')
+
+        return Data
+    
+    except Exception as e:
+        print(f"Request_All_Province_NOC_Forecast(noc_groupingid : {noc_groupingid})")
+        return pd.DataFrame()
+
+#endregion 

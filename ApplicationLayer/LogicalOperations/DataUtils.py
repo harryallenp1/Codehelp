@@ -141,3 +141,54 @@ def Get_All_Year_KPIs_For_Program(ProgramID, KPI):
     except Exception as e:
         print(f"Get_All_Year_KPIs_For_Program(ProgramID={ProgramID}) => {e}")
         return pd.DataFrame()
+    
+
+
+#region Forecasting Analysis Data Getters 
+
+def Get_Provincial_NOC_Forecast(provinceid : int, noc_groupingid : int) -> pd.DataFrame:
+    try:
+        df = DataService.Request_Provincial_NOC_Forecast(provinceID=provinceid, noc_groupingid=noc_groupingid)
+
+        df['yhat'] = df['yhat'].round(2)
+        df['yhat_lower'] = df['yhat_lower'].round(2)
+        df['yhat_upper'] = df['yhat_upper'].round(2)
+        return df
+
+    except Exception as e:
+        print(f"Get_Provincial_NOC_Forecast(provinceid : {provinceid}, noc_groupingid : {noc_groupingid}) => {e}")
+        return pd.DataFrame()
+
+
+def Get_NOC_Forecast_All_Provinces(noc_groupingid : int) -> pd.DataFrame:
+    try:
+        df = DataService.Request_All_Province_NOC_Forecast(noc_groupingid=noc_groupingid)
+
+        df = df.rename(columns={'province_shorthand':'Province','year':'Year'})
+
+        df = df[df['Year']>=2026]
+
+        # print(df)
+        
+
+        Years = sorted(df['Year'].unique())
+
+        # print(f"Years =>\n{Years}")
+
+        df = df.sort_values(by=['provinceid','Year'], ascending=[True,True])
+
+        df_pivot = df.pivot(index='Province', columns='Year', values='Employment Forecast')
+
+        df_pivot['Province'] = df_pivot.index
+        df_pivot = df_pivot.reset_index(drop=True)
+
+        df_pivot = df_pivot[['Province'] + Years]
+
+        
+        return df_pivot
+    
+
+    except Exception as e:
+        print(f"Get_NOC_Forecast_All_Provinces(noc_groupingid : {noc_groupingid}) => {e}")
+        return pd.DataFrame()
+#endregion 

@@ -97,6 +97,7 @@ layout = dbc.Container(
                                 selected_rows=[],
                                 filter_action='native',
                                 fixed_rows={'headers': True},
+                                fixed_columns={'headers': True}
             
                             ), className='dbc dbc-row-selectable'),
                         ),

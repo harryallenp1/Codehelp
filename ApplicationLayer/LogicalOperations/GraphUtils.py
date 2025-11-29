@@ -285,4 +285,132 @@ def Generate_NOC_ER_Stat(Data, NOC_Occupation):
         print(f"Generate_NOC_ER_Stat() => {e}")
         return {'data': [], 'layout': {'title': f'NOC Employment History for ERs Unavailable'}}
     
-    
+
+
+#region Forecast Graphs 
+
+def Generate_Forecast_Graph(Data):
+    try:
+        
+        future_data = Data[Data['Set'] == 'Future']
+        test_data = Data[Data['Set'].isin(['Validation','Test'])]
+
+        line = px.line(
+            title='Forecast (2024 - 2029)',
+            height=1000,
+            template='ggplot2',
+        )
+
+        line.add_trace(go.Scatter(
+            x=test_data['ds'], 
+            y=test_data['y'],
+            name='Actual',
+            line=dict(color='#172B4A', width=4.5),
+            mode='lines'
+        ))
+
+        line.add_trace(go.Scatter(
+            x=future_data['ds'], 
+            y=future_data['yhat'],
+            name='Forecast',
+            line=dict(color="#5B160F", width=4.5, dash='dot'),
+            mode='lines'
+        ))
+
+        line.add_traces(
+            go.Scatter(
+            x=future_data['ds'],
+            y=future_data['yhat_upper'],
+            mode='lines',
+            line=dict(width=0),  
+            showlegend=False,
+            hoverinfo='skip'
+            )
+        )
+
+        line.add_traces(
+        go.Scatter(
+            x=future_data['ds'],
+            y=future_data['yhat_lower'],
+            mode='lines',
+            line=dict(width=0), 
+            fill='tonexty',      
+            fillcolor='rgba(117, 43, 58, 0.2)', 
+             hoverinfo='skip',
+            name='Forecast Uncertainty Interval'
+            )
+            )
+        
+
+
+        line.add_trace(go.Scatter(
+            x=test_data['ds'], 
+            y=test_data['yhat'],
+            name='Predicted',
+            line=dict(color="#2B7561", width=4.5, dash='dash')
+        ))
+
+        line.add_traces(
+            go.Scatter(
+            x=test_data['ds'],
+            y=test_data['yhat_upper'],
+            mode='lines',
+            line=dict(width=0),  
+            showlegend=False,
+            hoverinfo='skip'
+            )
+        )
+
+        line.add_traces(
+        go.Scatter(
+            x=test_data['ds'],
+            y=test_data['yhat_lower'],
+            mode='lines',
+            line=dict(width=0), 
+            fill='tonexty',      
+            fillcolor='rgba(43, 117, 97, 0.2)', 
+             hoverinfo='skip',
+            name='Tested Uncertainty Interval'
+            )
+            )
+
+
+        line.update_layout(
+            title_font=dict(size=24),  
+            font=dict(size=15),  
+            hoverlabel=dict(
+                font_size=15 
+            ),
+            xaxis=dict(
+                title='Date (Monthly)',
+                title_font=dict(size=20),  
+                tickfont=dict(size=18)  
+            ),
+            yaxis=dict(
+                title='Employment (Persons in Thousands)',
+                title_font=dict(size=20),  
+                tickfont=dict(size=18)  
+            ),
+             legend=dict(
+                orientation='h',       
+                yanchor='bottom',     
+                y=-0.3,               
+                xanchor='center',      
+                 x=0.5,                 
+                font=dict(size=16)     
+            ),
+            hovermode='x unified',
+        )
+
+        return line
+
+
+
+
+
+    except Exception as e:
+        print(f"Generate_Forecast_Graph() => {e}")
+        return {'data': [], 'layout': {'title': f'NOC Employment Forecast Unavailable'}}
+
+
+#endregion 
