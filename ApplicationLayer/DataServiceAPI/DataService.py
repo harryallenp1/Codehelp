@@ -54,6 +54,25 @@ def RequestLatestKPIForProgram(ProgramID: int, Year=2020) -> pd.DataFrame:
     except Exception as e:
         print(f"RequestLatestKPIForProgram(ProgramID={ProgramID}) => {e}")
         return pd.DataFrame()
+    
+def RequestKPIForProgram(ProgramID: int) -> pd.DataFrame:
+    try:
+        url_to_call = f"{base_uri}{api_routes[1]}/?programcategoryid={ProgramID}"
+        second_url_to_call = f"{base_uri}{api_routes[9]}/"
+        data = Make_Request(url=url_to_call)
+        uniData = Make_Request(url=second_url_to_call)
+        data = Make_Request(url=url_to_call)
+
+        df_KPI = pd.DataFrame(data)
+        df_UniData = pd.DataFrame(uniData)
+        df_UniData = df_UniData[['universityid','address','lat','lon']]
+
+
+        df = df_UniData.merge(df_KPI, on='universityid')
+        return df
+    except Exception as e:
+        print(f"RequestKPIForProgram(ProgramID={ProgramID}) => {e}")
+        return pd.DataFrame()
 
 def RequestKPIForProgramAndUniversity(ProgramID: int, UniversityID: int) -> pd.DataFrame:
     try:

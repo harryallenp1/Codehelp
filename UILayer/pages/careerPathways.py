@@ -1,5 +1,6 @@
 from dash import dcc, html, callback ,Input, Output
 import dash 
+import dash_bootstrap_components as dbc
 
 from UILayer.DashAppUtilities import (Get_Program_Options, Get_NOC_Options, Generate_Program_Pathways, Generate_NOC_History_In_Ontario, Generate_NOC_Latest_ER_PCT)
 
@@ -9,62 +10,90 @@ dash.register_page(
     name="Career Pathways"
     )
 
-layout = html.Div(
-    children=[
-         html.H2(
-                children='Program Career Pathways', style={'textAlign':'left', 'font-size' : '35px', 'font-family':'Courier New'}
-            ),
-        
-        html.Label(children='Select Program',style={'font-size' : '20px', 'margin' : '5px'}),
-        dcc.Dropdown(
-         id='Select_Program',
-         style={'font-size' : '20px', 'margin' : '5px'},
-         multi=False,
-         options=Get_Program_Options()
+layout = dbc.Container(
+    [
 
-        ),
-
-        html.Br(),
-
-        html.Div(
-            children=[
-                dcc.Graph(
-                    id='Graph_ProgramMap'
-                )
-            ]
-        ),
-
-        html.Br(),
-
-        html.Label(children='Select NOC Occupation',style={'font-size' : '20px', 'margin' : '5px'}),
-        dcc.Dropdown(
-         id='Select_NOC',
-         style={'font-size' : '20px', 'margin' : '5px'},
-         multi=False,
-         options=Get_NOC_Options()
-
-        ),
-
-        html.Br(),
-
-        html.Div(
-            style={'display': 'flex', 'justify-content': 'space-between'},
-            children=[
-            html.Div(
-            dcc.Graph(id='Graph_NOC_History'),
-            style={'flex': '0 0 70%', 'padding': '10px'}
-            ),
-            html.Div(
-                dcc.Graph(id='Graph_NOC_ER_History'),
-                style={'flex': '0 0 30%', 'padding': '10px'}
+        # ---------- PAGE TITLE ----------
+        dbc.Row(
+            dbc.Col(
+                html.H2(
+                    "Program Career Pathways",
+                    className="text-start mt-3 mb-4",
+                    style={"font-size": "35px"}
+                ),
+                width=12
             )
-        ]
         ),
 
-        html.Br(),
-        
+        # ---------- PROGRAM DROPDOWN ----------
+        dbc.Card(
+            dbc.CardBody(
+                [
+                    html.Label(
+                        "Select Program",
+                        className="fw-bold mb-2",
+                        style={"font-size": "20px"}
+                    ),
+                    dcc.Dropdown(
+                        id='Select_Program',
+                        options=Get_Program_Options(),
+                        multi=False,
+                        className="mb-3"
+                    ),
+                    dcc.Graph(id='Graph_ProgramMap')
+                ]
+            ),
+            className="shadow-sm mb-4"
+        ),
 
-    ]
+        # ---------- NOC DROPDOWN ----------
+        dbc.Card(
+            dbc.CardBody(
+                [
+                    html.Label(
+                        "Select NOC Occupation",
+                        className="fw-bold mb-2",
+                        style={"font-size": "20px"}
+                    ),
+                    dcc.Dropdown(
+                        id='Select_NOC',
+                        options=Get_NOC_Options(),
+                        multi=False,
+                        className="mb-3"
+                    )
+                ]
+            ),
+            className="shadow-sm mb-4"
+        ),
+
+        # ---------- TWO GRAPH ROW ----------
+        dbc.Row(
+            [
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody(
+                            dcc.Graph(id='Graph_NOC_History')
+                        ),
+                        className="shadow-sm h-100"
+                    ),
+                    width=8
+                ),
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody(
+                            dcc.Graph(id='Graph_NOC_ER_History')
+                        ),
+                        className="shadow-sm h-100"
+                    ),
+                    width=4
+                )
+            ],
+            className="mb-5"
+        )
+
+    ],
+    fluid=True,
+    className="p-4"
 )
 
 

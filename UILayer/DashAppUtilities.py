@@ -1,7 +1,7 @@
 #By: Tejas Kumar
 #Integrating Application Layer Utilities for usage. 
 
-from ApplicationLayer.LogicalOperations import DataUtils, GraphUtils, OptionsUtils
+from ApplicationLayer.LogicalOperations import DataUtils, GraphUtils, OptionsUtils, DataTableUtils
 import pandas as pd
 
 print(f"Importing Dash App Utilities 2")
@@ -36,6 +36,12 @@ Program_Post_Grad_Employment_Rate_Dict = {
     2: '2020 Employment Rate 2 Years after Graduation',
     3: '2020 Graduation Rate',
 }
+
+Program_Post_Grad_Employment_Rate_Dict_All = {
+    1: 'Employment Rate 6 Months after Graduation',
+    2: 'Employment Rate 2 Years after Graduation',
+    3: 'Graduation Rate',
+}
 #endregion
 #  
 #region Functions for Generating Dropdown Options.
@@ -61,6 +67,13 @@ def Generate_KPI_Comparison(ProgramID, KPI):
         #Data Utils Responsibility 
         df = DataUtils.Get_Program_University_Data(ProgramID=ProgramID)
 
+        kpi_string = Program_Post_Grad_Employment_Rate_Dict_All[KPI]
+
+        df_All_Years = DataUtils.Get_All_Year_KPIs_For_Program(ProgramID=ProgramID, KPI=kpi_string)
+
+        Col_Dict = {str(col): str(col) for col in df_All_Years.columns}
+        Tbl_Dict = DataTableUtils.Generate_Dash_Table(data=df_All_Years, Col_Dict=Col_Dict)
+
         Program = ProgramDict[ProgramID]
         Measure = Program_Post_Grad_Employment_Rate_Dict[KPI]
         df['Program'] = df['ProgramID'].map(ProgramDict)
@@ -72,12 +85,12 @@ def Generate_KPI_Comparison(ProgramID, KPI):
         Map = GraphUtils.Graph_Program_University_Post_Grad_Employment_Rate_Map(Program=Program, Measure=Measure, Data=df)
         Bar = GraphUtils.Graph_Program_University_Post_Grad_Employment_Rate_Bar(Program=Program, Measure=Measure, Data=df)
 
-        return Map, Bar
+        return Map, Bar, Tbl_Dict
 
 
     except Exception as e:
          print(f'Generate_KPI_Map(Program={ProgramID}, KPI={KPI}) => {e}')
-         return {'data': [], 'layout': {'title': f'Post-Grad Employment Rate Data Unavailable for {ProgramDict[ProgramID]}'}}, {'data': [], 'layout': {'title': f'Post-Grad Employment Rate Data Unavailable for {ProgramID[ProgramDict]} Bar'}}
+         return {'data': [], 'layout': {'title': f'Post-Grad Employment Rate Data Unavailable for {ProgramDict[ProgramID]}'}}, {'data': [], 'layout': {'title': f'Post-Grad Employment Rate Data Unavailable for {ProgramID[ProgramDict]} Bar'}}, {}
 
 #endregion 
 

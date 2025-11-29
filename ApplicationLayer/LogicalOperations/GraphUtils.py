@@ -21,7 +21,7 @@ def Graph_Program_University_Post_Grad_Employment_Rate_Map(Program, Measure, Dat
         )
 
         scatter_map.update_layout(
-            title_font=dict(size=24),  # Set the title font size
+            title_font=dict(size=16),  # Set the title font size
             font=dict(size=15),  # Set general font size for labels and axis titles
             hoverlabel=dict(
                 font_size=20  # Set font size for hover data
@@ -65,11 +65,12 @@ def Graph_Program_University_Post_Grad_Employment_Rate_Bar(Program, Measure, Dat
             color=Measure,
             color_continuous_scale=['#692618','#183B69','#186930'],
             # text='University',
-            hover_data=['ProgramID','Program','UniversityID','University']
+            hover_data=['ProgramID','Program','UniversityID','University'],
+            template='ggplot2'
         )
 
         bar.update_layout(
-            title_font=dict(size=24),  # Set the title font size
+            title_font=dict(size=16),  # Set the title font size
             font=dict(size=15),  # Set general font size for labels and axis titles
             hoverlabel=dict(
                 font_size=20  # Set font size for hover data
@@ -97,7 +98,7 @@ def Generate_Program_to_Occupation_Mapping(Data):
     try:
 
         Mappings = px.treemap(
-            title=f'Career Paths per Program',
+            # title=f'Career Paths per Program',
             data_frame=Data,
             path=['Program','Broad Occupation Category','Sub-Major Group','Unit Group Occupation'],
             height=900,
@@ -114,7 +115,6 @@ def Generate_Program_to_Occupation_Mapping(Data):
             cmin=None,
             cmax=None
                 ),
-            hovertemplate=''
         )
 
         Mappings.update_layout(
@@ -145,7 +145,7 @@ def Generate_Program_to_Occupation_Mapping(Data):
 def Generate_NOC_History(Data, NOC_Occupation):
     try:
         History_Graph = px.line(
-            title=f"'{NOC_Occupation}' Employment History in Ontario",
+            # title=f"'{NOC_Occupation}' Employment History in Ontario",
             height=1000,
             template='ggplot2',
         )
@@ -200,7 +200,7 @@ def Generate_NOC_History(Data, NOC_Occupation):
             title_font=dict(size=24),  
             font=dict(size=15),  
             hoverlabel=dict(
-                font_size=20  
+                font_size=15 
             ),
             xaxis=dict(
                 title='Date (Monthly)',

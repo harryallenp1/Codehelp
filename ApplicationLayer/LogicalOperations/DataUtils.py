@@ -15,7 +15,21 @@ Latest_KPI_Rename_Dict = {
     'universityid':'UniversityID',
     'lat':'Lat',
     'lon':'Lon',
+    'year':'Year'
 }
+
+KPI_Rename_Dict = {
+    'employment_rate_2_years_after_graduating_field': 'Employment Rate 2 Years after Graduation',
+    'employment_rate_6_months_after_graduating_field': 'Employment Rate 6 Months after Graduation',
+    'graduation_rate': 'Graduation Rate',
+    'university':'University',
+    'programcategoryid':'ProgramID',
+    'universityid':'UniversityID',
+    'lat':'Lat',
+    'lon':'Lon',
+    'year':'Year'
+}
+
 
 Program_Links_Rename_Dict = {
     'programid' : 'ProgramID',
@@ -97,3 +111,33 @@ def Get_Latest_ER_NOC_PCT(NOC_GroupingID, provinceID=35):
         print(f"Get_Latest_ER_NOC_PCT(NOC_GroupingId={NOC_GroupingID},provinceID={provinceID}) => {e}")
         return pd.DataFrame()
 
+
+def Get_All_Year_KPIs_For_Program(ProgramID, KPI):
+    try:
+        df = DataService.RequestKPIForProgram(ProgramID=ProgramID)
+
+        df = df.rename(columns=KPI_Rename_Dict)
+
+        df_Reduced = df[['Year','University', KPI]].sort_values(by=['Year','University'], ascending=[False,True])
+        df_Reduced[KPI] = pd.to_numeric(df_Reduced[KPI], errors='coerce')
+        df_Reduced[KPI] = round(df_Reduced[KPI] * 100, 2)
+        Years = [2017,2018,2019,2020]
+        df_Reduced = df_Reduced[df_Reduced['Year'].isin(Years)]
+        df_pivot = df_Reduced.pivot(index='University', columns='Year', values=KPI)
+
+        
+       
+        df_pivot['University'] = df_pivot.index
+        df_pivot = df_pivot.reset_index(drop=True)
+        
+        
+        df_pivot = df_pivot[['University'] + Years]
+
+        print(df_pivot)
+        print(df_pivot.columns)
+
+        return df_pivot
+
+    except Exception as e:
+        print(f"Get_All_Year_KPIs_For_Program(ProgramID={ProgramID}) => {e}")
+        return pd.DataFrame()
