@@ -54,3 +54,31 @@ def GetAllProvincialNOCHistoricData():
         print(f"GetAllProvincialNOCHistoricData() => {e}")
         return pd.DataFrame()
 
+
+def GetProvinceNames():
+    try:
+        url_to_call = f"{base_uri}{api_routes[8]}/"
+        province_data = Make_Request(url=url_to_call)
+
+        province_df = pd.DataFrame(province_data)
+
+        province_df = province_df[['provinceid', 'province_shorthand']].drop_duplicates().reset_index(drop=True) 
+
+        return province_df 
+    except Exception as e:
+        print(f"GetProvinceNames() => {e}")
+        return pd.DataFrame()
+
+def GetNOCGroupingNames():
+    try:
+        url_to_call = f"{base_uri}{api_routes[5]}/"
+        noc_grouping_data = Make_Request(url=url_to_call)
+
+        noc_grouping_df = pd.DataFrame(noc_grouping_data)
+
+        noc_grouping_df = noc_grouping_df[['noc_groupingid', 'noc_grouping']].drop_duplicates().reset_index(drop=True) 
+
+        return noc_grouping_df 
+    except Exception as e:
+        print(f"GetNOCGroupingNames() => {e}")
+        return pd.DataFrame()

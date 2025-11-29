@@ -7,11 +7,17 @@ from prophet import Prophet
 import os
 from tqdm import tqdm
 tqdm.pandas()
-from sklearn.metrics import  mean_absolute_error
+from sklearn.metrics import  r2_score, mean_pinball_loss
 import json
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SAVE_PATH = f"{BASE_DIR}/Prophet/Data/All_Hyperparams.json"
+
+
+def trial_score(trial, r2_weight=0.55, pin_ball_loss=0.45):
+    r2 = trial.values[0]
+    pbL = trial.values[1]
+    return (r2_weight * r2) - (pin_ball_loss * pbL)
 
 
 class TunerClass(Tuner):
@@ -28,13 +34,13 @@ class TunerClass(Tuner):
 
             def objective(trial):
                 params = {
-                    "changepoint_prior_scale": trial.suggest_float("changepoint_prior_scale", 0.001, 0.5),
-                    "changepoint_range": trial.suggest_float("changepoint_range", 0.5, 0.95),
-                    "seasonality_prior_scale": trial.suggest_float("seasonality_prior_scale", 1.0, 20.0),
+                    "changepoint_prior_scale": trial.suggest_float("changepoint_prior_scale", 0.1, 0.5),
+                    "changepoint_range": trial.suggest_float("changepoint_range", 0.25, 0.85),
+                    "seasonality_prior_scale": trial.suggest_float("seasonality_prior_scale", 0.1, 20.0),
                     "holidays_prior_scale": trial.suggest_float("holidays_prior_scale", 1.0, 20.0),
-                    "seasonality_mode": trial.suggest_categorical("seasonality_mode", ["additive", "multiplicative"]),
-                    "weekly_seasonality": trial.suggest_int("weekly_seasonality", 3, 10),
+                    "seasonality_mode": trial.suggest_categorical("seasonality_mode", ["additive", "multiplicative"]    ),
                     "yearly_seasonality": trial.suggest_int("yearly_seasonality", 5, 20),
+                    "quarterly_fourier_order": trial.suggest_int("quarterly_fourier_order", 1, 10),
                     "growth": trial.suggest_categorical("growth", ["linear"]),
                 }
 
@@ -44,9 +50,15 @@ class TunerClass(Tuner):
                     seasonality_prior_scale=params["seasonality_prior_scale"],
                     holidays_prior_scale=params["holidays_prior_scale"],
                     seasonality_mode=params["seasonality_mode"],
-                    weekly_seasonality=params["weekly_seasonality"],
                     yearly_seasonality=params["yearly_seasonality"],
                     growth=params["growth"],
+                    weekly_seasonality=False,
+                )
+
+                model.add_seasonality(
+                    name='quarterly',
+                    period=3,  # 3 months
+                    fourier_order=params["quarterly_fourier_order"]
                 )
 
                 model.fit(train)
@@ -54,14 +66,23 @@ class TunerClass(Tuner):
 
                 forecast = forecast.merge(validate, on='ds')
 
-                mae = mean_absolute_error(forecast['y'], forecast['yhat'])
+                loss_lower = mean_pinball_loss(forecast['y'], forecast['yhat_lower'], alpha=0.025)
+                loss_upper = mean_pinball_loss(forecast['y'], forecast['yhat_upper'], alpha=0.975)
+                loss_median = mean_pinball_loss(validate['y'], forecast['yhat'], alpha=0.5)
 
-                return mae
+                pinball_loss_total = (loss_lower + loss_median + loss_upper)/3
 
-            study = optuna.create_study(direction='minimize')
-            study.optimize(objective, n_trials=50, timeout=120)
+                r2 = r2_score(forecast['y'], forecast['yhat'])
 
-            best_params = study.best_params
+                return r2, pinball_loss_total
+
+            study = optuna.create_study(directions=['maximize', 'minimize'])
+            study.optimize(objective, n_trials=30, timeout=120)
+
+            pareto_trials = study.best_trials
+
+            best_trial = max(pareto_trials, key=lambda t: trial_score(t, 0.55, 0.45))
+            best_params = best_trial.params
 
             self.best_params = best_params
 

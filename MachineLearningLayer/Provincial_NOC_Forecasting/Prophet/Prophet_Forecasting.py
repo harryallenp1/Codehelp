@@ -39,9 +39,16 @@ class Prophet_Forecaster(Forecaster):
                     seasonality_prior_scale=params["seasonality_prior_scale"],
                     holidays_prior_scale=params["holidays_prior_scale"],
                     seasonality_mode=params["seasonality_mode"],
-                    weekly_seasonality=params["weekly_seasonality"],
+                    weekly_seasonality=False,
+
                     yearly_seasonality=params["yearly_seasonality"],
                     growth=params["growth"],
+                )
+            
+            model.add_seasonality(
+                    name='quarterly',
+                    period=3,  
+                    fourier_order=params["quarterly_fourier_order"]
                 )
             
             model.fit(train)
@@ -54,6 +61,8 @@ class Prophet_Forecaster(Forecaster):
             valforecast['Set'] = 'Validation'
             testforecast['Set'] = 'Test'
 
+            maxDs = testforecast['ds'].max()
+
             future = model.make_future_dataframe(
                 periods=72,
                 freq='M'
@@ -65,7 +74,7 @@ class Prophet_Forecaster(Forecaster):
             Info = validateFull[['Key','provinceid','dguid','noc_groupingid']]
 
             futureforecast['year'] = futureforecast['ds'].dt.year
-            futureforecast = futureforecast[futureforecast['year']>=2025]
+            futureforecast = futureforecast[futureforecast['ds']> maxDs]
 
             futureforecast = futureforecast.merge(Info, on='Key')
 
