@@ -6,6 +6,7 @@ import os
 import warnings
 from ydata_profiling import ProfileReport
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score, root_mean_squared_error
+import numpy as np
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 class Prophet_Evaluator(Evaluater):
@@ -27,6 +28,7 @@ class Prophet_Evaluator(Evaluater):
             df_Eval = df.groupby(['provinceid','province_shorthand','noc_groupingid','noc_grouping']).apply(
                 lambda df: pd.DataFrame({
                     "r2": [r2_score(df['y'].to_numpy(), df['yhat'].to_numpy())],
+                    "euclidean distance": [np.linalg.norm(df['y'].to_numpy() - df['yhat'].to_numpy())],
                     "mae": [mean_absolute_error(df['y'].to_numpy(), df['yhat'].to_numpy())],
                     "rmse": [root_mean_squared_error(df['y'].to_numpy(), df['yhat'].to_numpy())],
                     "mse": [mean_squared_error(df['y'].to_numpy(), df['yhat'].to_numpy())],
