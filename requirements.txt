@@ -11,3 +11,4 @@ djangorestframework
 uvicorn
 prophet
 optuna
+pytest
