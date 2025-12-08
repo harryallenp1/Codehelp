@@ -4,7 +4,7 @@ By: Ed Wang
 This module represents the use case of getting all the University KPI statistics and
 the latest University KPI statistics
 
-JIRA Issue: PMP-**
+JIRA Issue: PMP-84
 '''
 
 from ApplicationLayer.LogicalOperations import DataUtils
