@@ -34,10 +34,10 @@ with open(RESULT_FILE, "w", encoding="utf-8") as f:
 
 #region -------- SUCCESS TESTS -------- #
 EXPECTED_SUCCESS_ENDPOINTS = [
-    (University_KPI_History_Check, (1,'2020 Employment Rate 2 Years after Graduation')),
-    (University_KPI_History_Check, (5,'2020 Employment Rate 6 Months after Graduation')),
-    (Latest_KPI_Program_data, (1,)),
-    (Latest_KPI_Program_data, (5, ))
+    (University_KPI_History_Check, (3,'2020 Employment Rate 2 Years after Graduation')),
+    (University_KPI_History_Check, (4,'2020 Employment Rate 6 Months after Graduation')),
+    (Latest_KPI_Program_data, (3,)),
+    (Latest_KPI_Program_data, (4, ))
 
 ]
 
