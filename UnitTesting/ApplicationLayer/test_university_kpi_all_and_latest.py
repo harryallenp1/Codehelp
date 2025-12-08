@@ -72,7 +72,7 @@ EXPECTED_FAILURE_ENDPOINTS = [
 #Expected Failure function that checks multiple conditions and appends the results to the log.
 @pytest.mark.parametrize("test_func, args", EXPECTED_FAILURE_ENDPOINTS)
 def test_expected_failure(test_func, args):
-    data, graph = test_func(*args)
+    data = test_func(*args)
 
     # Assert 1: Data is Empty
     try:
