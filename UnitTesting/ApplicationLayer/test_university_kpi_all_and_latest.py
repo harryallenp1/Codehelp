@@ -44,7 +44,7 @@ EXPECTED_SUCCESS_ENDPOINTS = [
 #Expected Success function that checks multiple conditions and appends the results to the log.
 @pytest.mark.parametrize("test_func, args", EXPECTED_SUCCESS_ENDPOINTS)
 def test_expected_success(test_func, args):
-    data, graph = test_func(*args)
+    data = test_func(*args)
 
     try:
         assert len(data) != 0
