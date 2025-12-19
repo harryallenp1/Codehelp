@@ -178,7 +178,21 @@ class Program_University_KPI(models.Model):
         db_table = 'Tbl_ProgramUniversityKPI'
 #endregion 
 
+# caching prediction model results
+class Prediction_Cache(models.Model):
+    datestamp = models.TextField(db_column='ds',blank=True, null=True)
+    provinceid = models.IntegerField(db_column='ProvinceID', blank=True, null=True)
+    dguid = models.TextField(db_column='dguid', blank=True, null=True)
+    noc_groupingid = models.IntegerField(db_column='noc_groupingid', blank=True, null=True)
+    y = models.FloatField(db_column='y', blank=True, null=True)
+    yhat_lower = models.FloatField(db_column='yhat_lower', blank=True, null=True)
+    yhat = models.FloatField(db_column='yhat', blank=True, null=True)
+    yhat_upper = models.FloatField(db_column='yhat_upper', blank=True, null=True)
+    set = models.TextField(db_column='Set', blank=True, null=True)
 
+    class Meta:
+        managed = False
+        db_table = 'df_forecasts'
 
 
 
