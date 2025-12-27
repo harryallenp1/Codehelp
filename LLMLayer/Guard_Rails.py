@@ -1,5 +1,5 @@
 '''
-By: 
+By: Ed Wang
 Create on: 2025-12-27
 Last Modified: 2025-12-27
 Description: This module contains the guard rails for input prompts and output responses. It uses various scanners to ensure that the prompts and responses adhere to specified guidelines, such as language checks, toxicity checks, bias checks, and relevance checks.
