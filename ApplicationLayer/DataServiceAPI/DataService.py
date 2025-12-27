@@ -193,3 +193,17 @@ def Request_All_Province_NOC_Forecast(noc_groupingid : int) -> pd.DataFrame:
         return pd.DataFrame()
 
 #endregion 
+
+#region Post Functions
+
+def Post_Prediction_Cache(payload: dict) -> dict:
+    try:
+        url_to_call = f"{base_uri}prediction_cache/"
+        response = client.post(url_to_call, json=payload)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print(f"Post_Prediction_Cache => {e}")
+        return {}
+
+#endregion
