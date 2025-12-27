@@ -16,9 +16,9 @@ from sentence_transformers import SentenceTransformer
 from chromadb.utils import embedding_functions
 from tqdm import tqdm
 import os
-from unstructured.partition.pdf import partition_pdf
-from unstructured.documents.elements import NarrativeText,Table
+import pdfplumber
 import pandas as pd
+
 
 PDF_FOLDER = 'PDFs'
 META_DATA_FILE = os.path.join(PDF_FOLDER, 'Meta_Data.json')
@@ -48,97 +48,36 @@ def append_metadata(base_meta: dict, page_number: int, content_type: str) -> dic
     meta["content_type"] = content_type
     return meta
 
-#Processing textual elements by chunking them into smaller parts. 
-def process_text_element(el,base_meta):
-    chunks = text_splitter.split_text(el.text)
 
+# Process text per page by chunking
+def process_page_text(page_text: str, base_meta: dict, page_number: int):
+    chunks = text_splitter.split_text(page_text)
     docs = []
+
     for chunk in chunks:
         docs.append({
             "id": str(uuid4()),
             "text": chunk,
-            "metadata": append_metadata(
-                base_meta,
-                el.metadata.page_number,
-                "paragraph_chunk"
-            )
+            "metadata": append_metadata(base_meta, page_number, "paragraph_chunk")
         })
+
     return docs
 
-#region Table Processing
-#These function are using to process table elements from the PDF and convert them into row-wise dictionaries using the 'table_element_to_rows' function
-def table_element_to_rows(el):
-    html = el.text_as_html
-    if not html:
-        return []
-
-    try:
-        dfs = pd.read_html(html)
-    except ValueError:
-        return []
-
-    rows = []
-    for df in dfs:
-        df = df.fillna("")
-        df.columns = [str(c).strip() for c in df.columns]
-
-        for _, row in df.iterrows():
-            row_dict = {
-                col: str(row[col]).strip()
-                for col in df.columns
-                if str(row[col]).strip()
-            }
-            if row_dict:
-                rows.append(row_dict)
-
-    return rows
-
-
-def process_table_element(el, base_meta):
-    rows = table_element_to_rows(el)
-
-    docs = []
-    for row in rows:
-        text = "Table record with " + ", ".join(
-            f"{k}: {v}" for k, v in row.items()
-        ) + "."
-
-        docs.append({
-            "id": str(uuid4()),
-            "text": text,
-            "metadata": append_metadata(
-                base_meta,
-                el.metadata.page_number,
-                "table_row"
-            )
-        })
-    return docs
-#endregion 
-
-#Processes the PDFs by iterating through each file and extracting text and table elements per file. 
+# Process PDFs and extracting text and page numbers
 def Process_PDFs():
     print("Starting PDF processing...")
-    ids = list(meta_data.keys())
-
     all_docs = []
 
-    for ID in tqdm(ids, desc="Processing PDFs"):
+    for ID in tqdm(meta_data.keys(), desc="Processing PDFs"):
         sub_dict = meta_data[ID]
         file_path = os.path.join(PDF_FOLDER, sub_dict['fileName'])
         print(f"Processing file: {file_path}")
 
-        elements = partition_pdf(
-            filename=file_path,
-            strategy="fast"
-        )
-
-        #Processing the element by type and append the extracted context the all_docs list.
-        for el in elements:
-            if isinstance(el, NarrativeText):
-                all_docs.extend(process_text_element(el,base_meta=sub_dict))
-
-            elif isinstance(el, Table):
-                all_docs.extend(process_table_element(el,base_meta=sub_dict))
+        with pdfplumber.open(file_path) as pdf:
+            for i, page in enumerate(pdf.pages, start=1):
+                page_text = page.extract_text()
+                if page_text:
+                    all_docs.extend(process_page_text(page_text, sub_dict, i))
 
     return all_docs
 
