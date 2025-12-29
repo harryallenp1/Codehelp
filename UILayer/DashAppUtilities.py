@@ -2,9 +2,30 @@
 #Integrating Application Layer Utilities for usage. 
 
 from ApplicationLayer.LogicalOperations import DataUtils, GraphUtils, OptionsUtils, DataTableUtils
+import requests
 import pandas as pd
 
 print(f"Importing Dash App Utilities 2")
+
+#region RAG LLM Functionalities
+RAG_API_URI = "http://localhost:8001/query/"
+
+#Send Query to RAG API and get response
+def Send_Query(uer_query: str) -> str:
+    try:
+        payload = {
+            "user_query": uer_query
+        }
+        response = requests.post(RAG_API_URI, json=payload)
+        response.raise_for_status()
+        data = response.json()
+        answer = data.get("answer", "I'm sorry, I couldn't get an answer at this time.")
+        return answer
+    except Exception as e:
+        print(f"Error sending query to RAG API => {e}")
+        return "Error processing the query."
+
+#endregion
 
 #An abstract function for Generating a key pair list for dropdown options in Dash.
 def Generate_Options(KeyDict):
