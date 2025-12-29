@@ -16,7 +16,8 @@ from .models import (
     Program_University_KPI,
     Province,
     Provincial_NOC_Group_Labor_Statistic,
-    University
+    University,
+    PredictionCache
 )
 from .serializers import (
     Economic_Region_Employment_EstimateSerializer,
@@ -30,7 +31,8 @@ from .serializers import (
     Program_University_KPISerializer,
     ProvinceSerializer,
     Provincial_NOC_Group_Labor_StatisticSerializer,
-    UniversitySerializer
+    UniversitySerializer,
+    PredictionCacheSerializer
 )
 
 
@@ -115,5 +117,11 @@ class Provincial_NOC_Group_Labor_StatisticViewSet(viewsets.ReadOnlyModelViewSet)
 class UniversityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = University.objects.all()
     serializer_class = UniversitySerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = '__all__'
+
+class PredictionCacheViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = PredictionCache.objects.all()
+    serializer_class = PredictionCacheSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = '__all__'

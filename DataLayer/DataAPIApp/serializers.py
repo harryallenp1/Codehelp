@@ -16,7 +16,7 @@ from .models import (
     Province,
     Provincial_NOC_Group_Labor_Statistic,
     University,
-    Prediction_Cache
+    PredictionCache
 )
 
 #region Serializers 
@@ -93,6 +93,6 @@ class UniversitySerializer(serializers.ModelSerializer):
 
 class PredictionCacheSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Prediction_Cache
+        model = PredictionCache
         fields = '__all__'
 #endregion 

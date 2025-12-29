@@ -16,7 +16,8 @@ from .views import (
     Program_University_KPIViewSet_Latest,
     ProvinceViewSet,
     Provincial_NOC_Group_Labor_StatisticViewSet,
-    UniversityViewSet
+    UniversityViewSet,
+    PredictionCacheViewSet
 )
 
 
@@ -33,6 +34,7 @@ router.register(r'program_university_kpi_latest', Program_University_KPIViewSet_
 router.register(r'province', ProvinceViewSet, basename='province')
 router.register(r'provincial_noc_group_labor_statistic', Provincial_NOC_Group_Labor_StatisticViewSet, basename='provincial_noc_group_labor_statistic')
 router.register(r'university', UniversityViewSet, basename='university')
+router.register(r'prediction_cache', PredictionCacheViewSet, basename='prediction_cache')
 
 urlpatterns = [
     path('api/', include(router.urls)),

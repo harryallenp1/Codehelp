@@ -179,7 +179,7 @@ class Program_University_KPI(models.Model):
 #endregion 
 
 # caching prediction model results
-class Prediction_Cache(models.Model):
+class PredictionCache(models.Model):
     datestamp = models.TextField(db_column='ds',blank=True, null=True)
     provinceid = models.IntegerField(db_column='ProvinceID', blank=True, null=True)
     dguid = models.TextField(db_column='dguid', blank=True, null=True)
