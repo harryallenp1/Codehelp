@@ -180,6 +180,7 @@ class Program_University_KPI(models.Model):
 
 # caching prediction model results
 class PredictionCache(models.Model):
+    entryid = models.IntegerField(db_column='EntryID', blank=False, null=False, primary_key=True)
     datestamp = models.TextField(db_column='ds',blank=True, null=True)
     provinceid = models.IntegerField(db_column='ProvinceID', blank=True, null=True)
     dguid = models.TextField(db_column='dguid', blank=True, null=True)
@@ -191,8 +192,7 @@ class PredictionCache(models.Model):
     set = models.TextField(db_column='Set', blank=True, null=True)
 
     class Meta:
-        managed = False
-        db_table = 'df_forecasts'
+        db_table = 'Tbl_Temp_Forecasts'
 
 
 

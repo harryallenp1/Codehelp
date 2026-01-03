@@ -4,6 +4,8 @@
 
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
+from rest_framework import status
 from .models import (
     Economic_Region_Employment_Estimate,
     Economic_Region_Vacancy_Wage_Estimate,
@@ -120,8 +122,16 @@ class UniversityViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = '__all__'
 
-class PredictionCacheViewSet(viewsets.ReadOnlyModelViewSet):
+class PredictionCacheViewSet(viewsets.ModelViewSet):
     queryset = PredictionCache.objects.all()
     serializer_class = PredictionCacheSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = '__all__'
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        many = isinstance(data, list) 
+        serializer = self.get_serializer(data=data, many=many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

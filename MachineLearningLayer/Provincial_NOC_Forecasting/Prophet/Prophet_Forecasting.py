@@ -1,5 +1,6 @@
 from MachineLearningLayer.Utils.Forecast import Forecaster
 from MachineLearningLayer.Utils.Splitter import Splitter
+from DataTransportationLayer.DataServiceAPI import DataService
 import pandas as pd
 import warnings
 from prophet import Prophet
@@ -7,6 +8,7 @@ import os
 from tqdm import tqdm
 tqdm.pandas()
 import json
+import numpy as np
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HypereparamsPath = f'{BASE_DIR}/Prophet/Data/All_Hyperparams.json'
@@ -155,7 +157,51 @@ def Generate_All_Forecasts(df , Hyperparams):
             All_Forecasts.append(forecast_data)
 
         df_All_Forecasts = pd.concat(All_Forecasts, axis=0)
+
+        
+        df_All_Forecasts = df_All_Forecasts.reset_index(drop=True)
+
+        df_All_Forecasts_DB = df_All_Forecasts.rename(columns={
+    'ds': 'datestamp',
+    'ProvinceID': 'provinceid',
+    'dguid': 'dguid',
+    'noc_groupingid': 'noc_groupingid',
+    'y': 'y',
+    'yhat_lower': 'yhat_lower',
+    'yhat': 'yhat',
+    'yhat_upper': 'yhat_upper',
+    'Set': 'set'
+        })
+
+        df_All_Forecasts_DB['datestamp'] = (
+    pd.to_datetime(df_All_Forecasts_DB['datestamp'])
+    .dt.strftime('%Y-%m-%dT%H:%M:%S')
+)
+
+        
+        df_All_Forecasts_DB['entryid'] = range(1, len(df_All_Forecasts_DB) + 1)
+
+
+        df_All_Forecasts_DB = df_All_Forecasts_DB.drop(columns=['Key','year'])
+
+        
+        df_All_Forecasts_DB.replace(
+    [np.inf, -np.inf, np.nan],
+    0,
+    inplace=True
+)
+
+    
+        records = df_All_Forecasts_DB.to_dict(orient="records")
+
+        response = DataService.Post_Prediction_Cache(payload=records)
+
+        print(f"Post Response => {response}")
+
         df_All_Forecasts.to_parquet(SAVE_PATH, index=False)
+
+        
+
 
         print(df_All_Forecasts[['Key','ds','y','yhat']])
 
@@ -178,3 +224,4 @@ if __name__ == '__main__':
 
     print(f"---Generating Forecasts---\n")
     Generate_All_Forecasts(df=df, Hyperparams=Hyperparams)
+

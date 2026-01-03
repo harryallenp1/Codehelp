@@ -292,8 +292,8 @@ def Generate_NOC_ER_Stat(Data, NOC_Occupation):
 def Generate_Forecast_Graph(Data):
     try:
         
-        future_data = Data[Data['Set'] == 'Future']
-        test_data = Data[Data['Set'].isin(['Validation','Test'])]
+        future_data = Data[Data['set'] == 'Future']
+        test_data = Data[Data['set'].isin(['Validation','Test'])]
 
         line = px.line(
             title='Forecast (2024 - 2029)',
@@ -302,7 +302,7 @@ def Generate_Forecast_Graph(Data):
         )
 
         line.add_trace(go.Scatter(
-            x=test_data['ds'], 
+            x=test_data['datestamp'], 
             y=test_data['y'],
             name='Actual',
             line=dict(color='#172B4A', width=4.5),
@@ -310,7 +310,7 @@ def Generate_Forecast_Graph(Data):
         ))
 
         line.add_trace(go.Scatter(
-            x=future_data['ds'], 
+            x=future_data['datestamp'], 
             y=future_data['yhat'],
             name='Forecast',
             line=dict(color="#5B160F", width=4.5, dash='dot'),
@@ -319,7 +319,7 @@ def Generate_Forecast_Graph(Data):
 
         line.add_traces(
             go.Scatter(
-            x=future_data['ds'],
+            x=future_data['datestamp'],
             y=future_data['yhat_upper'],
             mode='lines',
             line=dict(width=0),  
@@ -330,7 +330,7 @@ def Generate_Forecast_Graph(Data):
 
         line.add_traces(
         go.Scatter(
-            x=future_data['ds'],
+            x=future_data['datestamp'],
             y=future_data['yhat_lower'],
             mode='lines',
             line=dict(width=0), 
@@ -344,7 +344,7 @@ def Generate_Forecast_Graph(Data):
 
 
         line.add_trace(go.Scatter(
-            x=test_data['ds'], 
+            x=test_data['datestamp'], 
             y=test_data['yhat'],
             name='Predicted',
             line=dict(color="#2B7561", width=4.5, dash='dash')
@@ -352,7 +352,7 @@ def Generate_Forecast_Graph(Data):
 
         line.add_traces(
             go.Scatter(
-            x=test_data['ds'],
+            x=test_data['datestamp'],
             y=test_data['yhat_upper'],
             mode='lines',
             line=dict(width=0),  
@@ -363,7 +363,7 @@ def Generate_Forecast_Graph(Data):
 
         line.add_traces(
         go.Scatter(
-            x=test_data['ds'],
+            x=test_data['datestamp'],
             y=test_data['yhat_lower'],
             mode='lines',
             line=dict(width=0), 

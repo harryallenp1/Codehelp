@@ -24,11 +24,12 @@ api_routes = {
     6: 'economic_region_employment_estimate',
     7: 'economicregion',
     8: 'province',
-    9: 'university'
+    9: 'university',
+    10: 'prediction_cache'
 }
 
 # Instantiating a synchronous client with 120s timeout
-client = httpx.Client(timeout=120.0)
+client = httpx.Client(timeout=500.0)
 
 # Generic function for making a request to the API given a formatted URL
 def Make_Request(url: str):
@@ -165,10 +166,21 @@ def RequestProvince() -> pd.DataFrame:
 #region Temporary Functions 
 
 
+# def Request_Provincial_NOC_Forecast(provinceID : int, noc_groupingid : int) -> pd.DataFrame:
+#     try:
+#         Data = dp_Forecast_Data.filter((pl.col('provinceid')==provinceID) & (pl.col('noc_groupingid')==noc_groupingid)).collect().to_pandas().sort_values(by='ds')
+#         return Data
+        
+
+#     except Exception as e:
+#         print(f"Request_Provincial_NOC_Forecast(provinceID : {provinceID}, noc_groupingid : {noc_groupingid}) => {e}")
+#         return pd.DataFrame()
+    
 def Request_Provincial_NOC_Forecast(provinceID : int, noc_groupingid : int) -> pd.DataFrame:
     try:
-        Data = dp_Forecast_Data.filter((pl.col('provinceid')==provinceID) & (pl.col('noc_groupingid')==noc_groupingid)).collect().to_pandas().sort_values(by='ds')
-        return Data
+        url_to_call = f"{base_uri}{api_routes[10]}/?provinceid={provinceID}&noc_groupingid={noc_groupingid}"
+        data = Make_Request(url=url_to_call)
+        return pd.DataFrame(data)
         
 
     except Exception as e:
@@ -176,16 +188,42 @@ def Request_Provincial_NOC_Forecast(provinceID : int, noc_groupingid : int) -> p
         return pd.DataFrame()
     
 
+# def Request_All_Province_NOC_Forecast(noc_groupingid : int) -> pd.DataFrame:
+#     try: 
+#         Data = dp_Forecast_Data.filter(pl.col('noc_groupingid')==noc_groupingid).group_by(['provinceid','year']).agg(
+#             pl.col('yhat').sum().round(2).alias('Employment Forecast')
+#         ).collect().to_pandas()
+
+#         ProvinceData = RequestProvince()
+
+#         Data = Data.merge(ProvinceData[['provinceid','province_shorthand']], how='left')
+
+#         return Data
+    
+#     except Exception as e:
+#         print(f"Request_All_Province_NOC_Forecast(noc_groupingid : {noc_groupingid})")
+#         return pd.DataFrame()
+
 def Request_All_Province_NOC_Forecast(noc_groupingid : int) -> pd.DataFrame:
-    try: 
-        Data = dp_Forecast_Data.filter(pl.col('noc_groupingid')==noc_groupingid).group_by(['provinceid','year']).agg(
+    try:
+        url_to_call = f"{base_uri}{api_routes[10]}/?noc_groupingid={noc_groupingid}"
+        second_url_to_call = f"{base_uri}{api_routes[8]}/"
+
+        provData = Make_Request(url=second_url_to_call)
+        df_prov = pd.DataFrame(provData)
+        data = Make_Request(url=url_to_call)
+        df = pd.DataFrame(data)
+        df['datestamp'] = pd.to_datetime(df['datestamp'])
+        df['year'] = df['datestamp'].dt.year
+        df = pl.from_pandas(df)
+        
+
+        Data = df.group_by(['provinceid','year']).agg(
             pl.col('yhat').sum().round(2).alias('Employment Forecast')
-        ).collect().to_pandas()
+        ).to_pandas()
 
-        ProvinceData = RequestProvince()
-
-        Data = Data.merge(ProvinceData[['provinceid','province_shorthand']], how='left')
-
+        Data = Data.merge(df_prov, on='provinceid', how='left')
+        print(f"Data =>\n{Data}")
         return Data
     
     except Exception as e:
@@ -198,7 +236,7 @@ def Request_All_Province_NOC_Forecast(noc_groupingid : int) -> pd.DataFrame:
 
 def Post_Prediction_Cache(payload: dict) -> dict:
     try:
-        url_to_call = f"{base_uri}prediction_cache/"
+        url_to_call = f"{base_uri}{api_routes[10]}/"
         response = client.post(url_to_call, json=payload)
         response.raise_for_status()
         return response.json()
