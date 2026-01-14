@@ -14,6 +14,10 @@ class FeatureEngineer(ABC):
     @abstractmethod
     def Add_Supplementary_Features(self):
         pass
+
+    @abstractmethod 
+    def Add_Date_Features(self):
+        pass
     
     @abstractmethod
     def Assign_Directional_Class(self):
