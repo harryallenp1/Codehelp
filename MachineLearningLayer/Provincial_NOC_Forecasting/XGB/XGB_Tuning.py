@@ -25,6 +25,10 @@ def trial_score(trial, r2_weight=0.55, pin_ball_loss=0.45):
 def pinball(g, q, col):
     return mean_pinball_loss(g['y'], g[col], alpha=q)
 
+def pinball_vec(y, y_pred, q):
+    e = y - y_pred
+    return np.mean(np.maximum(q*e, (q-1)*e))
+
 
 class TunerClass(Tuner):
     def __init__(self, data, meta_data):
@@ -157,28 +161,24 @@ class TunerClass(Tuner):
                     static_features=[]
                 )
 
+                
+
                 cv_df[['XGBRegressor','XGBRegressor2','XGBRegressor3']] = cv_df[['XGBRegressor','XGBRegressor2','XGBRegressor3']].round(2)
-                # print(f'Cross Validation Frame =>\n{cv_df}\n')
+                print(f'Cross Validation Frame =>\n{cv_df}\n')
 
-                rmse_df = cv_df.groupby('cutoff').apply(lambda g: (
-                    root_mean_squared_error(y_true=g['y'],y_pred=g['XGBRegressor'])
-                    if len(g) >= 2 else np.nan
-                )).reset_index(name='rmse')
+                rmse = root_mean_squared_error(y_true=cv_df['y'], y_pred=cv_df['XGBRegressor'])
+                loss_lower = mean_pinball_loss(cv_df['y'], cv_df['yhat_lower'], alpha=0.10)
+                loss_upper = mean_pinball_loss(cv_df['y'], cv_df['yhat_upper'], alpha=0.90)
+                loss_median = mean_pinball_loss(cv_df['y'], cv_df['yhat'], alpha=0.5)
 
-                pinball_loss_df = (cv_df.groupby('cutoff').apply(lambda g: pd.Series(
-                    {'pinball_q10': pinball(g, 0.10, 'XGBRegressor2'),
-                    'pinball_q90': pinball(g, 0.90, 'XGBRegressor3'),
-                })).reset_index())
+                pinball_loss_total = (loss_lower + loss_median + loss_upper)/3
 
                 
-                rmse_mean = rmse_df['rmse'].mean()
-                pinball_mean =  (pinball_loss_df['pinball_q10'].mean() + pinball_loss_df['pinball_q90'].mean()) / 2
-
-                return (rmse_mean * 0.55) + (pinball_mean * 0.45)
+                return (rmse * 0.55) + (pinball_loss_total * 0.45)
 
 
             study = optuna.create_study(direction='minimize')
-            study.optimize(objective, n_trials=20, timeout=120)
+            study.optimize(objective, n_trials=1, timeout=120)
 
             
             best_params = study.best_params
@@ -222,7 +222,7 @@ def Tune_All(df, keys):
     try:
         
         All_Hyperparams = {}
-        for key in tqdm(keys, desc='Processing Keys', unit='(provinceid, noc_groupingid)'):
+        for key in tqdm(keys[0:1], desc='Processing Keys', unit='(provinceid, noc_groupingid)'):
 
             print(f"#Processing {key}#\n")
 
