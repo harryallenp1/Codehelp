@@ -167,9 +167,9 @@ class TunerClass(Tuner):
                 print(f'Cross Validation Frame =>\n{cv_df}\n')
 
                 rmse = root_mean_squared_error(y_true=cv_df['y'], y_pred=cv_df['XGBRegressor'])
-                loss_lower = mean_pinball_loss(cv_df['y'], cv_df['yhat_lower'], alpha=0.10)
-                loss_upper = mean_pinball_loss(cv_df['y'], cv_df['yhat_upper'], alpha=0.90)
-                loss_median = mean_pinball_loss(cv_df['y'], cv_df['yhat'], alpha=0.5)
+                loss_lower = mean_pinball_loss(cv_df['y'], cv_df['XGBRegressor2'], alpha=0.10)
+                loss_upper = mean_pinball_loss(cv_df['y'], cv_df['XGBRegressor3'], alpha=0.90)
+                loss_median = mean_pinball_loss(cv_df['y'], cv_df['XGBRegressor'], alpha=0.5)
 
                 pinball_loss_total = (loss_lower + loss_median + loss_upper)/3
 
@@ -178,7 +178,7 @@ class TunerClass(Tuner):
 
 
             study = optuna.create_study(direction='minimize')
-            study.optimize(objective, n_trials=1, timeout=120)
+            study.optimize(objective, n_trials=20, timeout=120)
 
             
             best_params = study.best_params
@@ -222,7 +222,7 @@ def Tune_All(df, keys):
     try:
         
         All_Hyperparams = {}
-        for key in tqdm(keys[0:1], desc='Processing Keys', unit='(provinceid, noc_groupingid)'):
+        for key in tqdm(keys, desc='Processing Keys', unit='(provinceid, noc_groupingid)'):
 
             print(f"#Processing {key}#\n")
 
