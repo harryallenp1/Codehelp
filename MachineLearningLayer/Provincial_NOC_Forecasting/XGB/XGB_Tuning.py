@@ -156,25 +156,28 @@ class TunerClass(Tuner):
 
                 cv_df = fsct.cross_validation(
                     df=set,
-                    h=24,
-                    n_windows=4,
+                    h=4,
+                    n_windows=3,
                     static_features=[]
                 )
 
                 
 
                 cv_df[['XGBRegressor','XGBRegressor2','XGBRegressor3']] = cv_df[['XGBRegressor','XGBRegressor2','XGBRegressor3']].round(2)
-                print(f'Cross Validation Frame =>\n{cv_df}\n')
+                # print(f'Cross Validation Frame =>\n{cv_df}\n')
+
+                # cv_df.to_csv('Sample.csv',index=False)
+                # return 0.5
 
                 rmse = root_mean_squared_error(y_true=cv_df['y'], y_pred=cv_df['XGBRegressor'])
-                loss_lower = mean_pinball_loss(cv_df['y'], cv_df['XGBRegressor2'], alpha=0.10)
-                loss_upper = mean_pinball_loss(cv_df['y'], cv_df['XGBRegressor3'], alpha=0.90)
-                loss_median = mean_pinball_loss(cv_df['y'], cv_df['XGBRegressor'], alpha=0.5)
+                # loss_lower = mean_pinball_loss(cv_df['y'], cv_df['XGBRegressor2'], alpha=0.10)
+                # loss_upper = mean_pinball_loss(cv_df['y'], cv_df['XGBRegressor3'], alpha=0.90)
+                # loss_median = mean_pinball_loss(cv_df['y'], cv_df['XGBRegressor'], alpha=0.5)
 
-                pinball_loss_total = (loss_lower + loss_median + loss_upper)/3
+                # pinball_loss_total = (loss_lower + loss_median + loss_upper)/3
 
                 
-                return (rmse * 0.55) + (pinball_loss_total * 0.45)
+                return rmse
 
 
             study = optuna.create_study(direction='minimize')
