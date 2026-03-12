@@ -115,19 +115,22 @@ def Generate_Program_to_Occupation_Mapping(Data):
             cmin=None,
             cmax=None
                 ),
+            hoverinfo='none',
+            hovertemplate=None
         )
 
         Mappings.update_layout(
              font=dict(
-        size=18,                
+        size=12,                
         ),
             title=dict(
-        font=dict(size=28),
+        font=dict(size=16),
         x=0.5
         ),
          hoverlabel=dict(
-                font_size=20 
+                font_size=12 
             ),
+            hovermode=False
 
         )
 
