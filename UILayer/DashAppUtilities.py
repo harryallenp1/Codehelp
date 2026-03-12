@@ -215,7 +215,7 @@ def Generate_Forecast_Analysis(provinceid: int, noc_groupingid : int):
 
     df_All = DataUtils.Get_NOC_Forecast_All_Provinces(noc_groupingid=noc_groupingid)
 
-    print(f"All Province Data =>\{df_All}")
+    print(f"All Province Data => {df_All}")
 
     Col_Dict = {str(col): str(col) for col in df_All.columns}
     Tbl_Dict = DataTableUtils.Generate_Dash_Table(data=df_All, Col_Dict=Col_Dict)

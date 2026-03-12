@@ -638,9 +638,13 @@ def Generate_Occupation_Category_Distribution(Data):
         )
         
         fig.update_layout(
-            font=dict(size=14),
-            title_font=dict(size=20),
-            hoverlabel=dict(font_size=16)
+            font=dict(size=10),
+            title_font=dict(size=16),
+            hoverlabel=dict(font_size=12)
+        )
+        
+        fig.update_traces(
+            textfont=dict(size=8)
         )
         
         return fig
@@ -681,8 +685,8 @@ def Generate_Career_Path_Comparison(Data, NOC_Occupation):
             yaxis_title='Employment (Thousands)',
             template='ggplot2',
             height=600,
-            font=dict(size=14),
-            title_font=dict(size=20),
+            font=dict(size=12),
+            title_font=dict(size=16),
             hovermode='x unified'
         )
         
@@ -724,8 +728,8 @@ def Generate_Regional_Employment_Heatmap(Data):
             yaxis_title='Economic Region',
             height=600,
             template='ggplot2',
-            font=dict(size=14),
-            title_font=dict(size=20)
+            font=dict(size=12),
+            title_font=dict(size=16)
         )
         
         return fig
@@ -764,9 +768,13 @@ def Generate_Program_Occupation_Network(Data):
         )
         
         fig.update_layout(
-            font=dict(size=14),
-            title_font=dict(size=20),
-            hoverlabel=dict(font_size=16)
+            font=dict(size=12),
+            title_font=dict(size=16),
+            hoverlabel=dict(font_size=12)
+        )
+        
+        fig.update_traces(
+            textfont=dict(size=10)
         )
         
         return fig
@@ -819,8 +827,8 @@ def Generate_Employment_Trend_Summary(Data):
             yaxis_title='Employment (Thousands)',
             template='ggplot2',
             height=500,
-            font=dict(size=14),
-            title_font=dict(size=20),
+            font=dict(size=12),
+            title_font=dict(size=16),
             hovermode='x unified',
             legend=dict(
                 orientation='h',
