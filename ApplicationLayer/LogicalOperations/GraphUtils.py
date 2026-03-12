@@ -644,7 +644,9 @@ def Generate_Occupation_Category_Distribution(Data):
         )
         
         fig.update_traces(
-            textfont=dict(size=8)
+            textfont=dict(size=8),
+            hoverinfo='none',
+            hovertemplate=None
         )
         
         # Disable zoom and pan interactions
@@ -682,7 +684,8 @@ def Generate_Career_Path_Comparison(Data, NOC_Occupation):
                 mode='lines+markers',
                 name='Employment',
                 line=dict(color='#172B4A', width=3),
-                marker=dict(size=6)
+                marker=dict(size=6),
+                hoverinfo='none'
             )
         )
         
@@ -694,7 +697,7 @@ def Generate_Career_Path_Comparison(Data, NOC_Occupation):
             height=600,
             font=dict(size=12),
             title_font=dict(size=16),
-            hovermode='x unified',
+            hovermode=False,
             xaxis=dict(fixedrange=True),
             yaxis=dict(fixedrange=True)
         )
@@ -728,7 +731,7 @@ def Generate_Regional_Employment_Heatmap(Data):
                 [1, '#186930']
             ],
             showscale=True,
-            hovertemplate='Region: %{y}<br>Change: %{z:.2f}%<extra></extra>'
+            hoverinfo='none'
         ))
         
         fig.update_layout(
@@ -817,7 +820,8 @@ def Generate_Employment_Trend_Summary(Data):
                 name='Employment',
                 line=dict(color='#172B4A', width=3),
                 fill='tozeroy',
-                fillcolor='rgba(23, 43, 74, 0.1)'
+                fillcolor='rgba(23, 43, 74, 0.1)',
+                hoverinfo='none'
             )
         )
         
@@ -828,7 +832,8 @@ def Generate_Employment_Trend_Summary(Data):
                 y=Data['3-Month Moving Average'],
                 mode='lines',
                 name='3-Month Average',
-                line=dict(color='#9D3D39', width=2, dash='dash')
+                line=dict(color='#9D3D39', width=2, dash='dash'),
+                hoverinfo='none'
             )
         )
         
@@ -840,7 +845,7 @@ def Generate_Employment_Trend_Summary(Data):
             height=500,
             font=dict(size=12),
             title_font=dict(size=16),
-            hovermode='x unified',
+            hovermode=False,
             xaxis=dict(fixedrange=True),
             yaxis=dict(fixedrange=True),
             legend=dict(
