@@ -647,6 +647,13 @@ def Generate_Occupation_Category_Distribution(Data):
             textfont=dict(size=8)
         )
         
+        # Disable zoom and pan interactions
+        fig.update_layout(
+            xaxis=dict(fixedrange=True),
+            yaxis=dict(fixedrange=True),
+            dragmode=False
+        )
+        
         return fig
     
     except Exception as e:
@@ -687,7 +694,9 @@ def Generate_Career_Path_Comparison(Data, NOC_Occupation):
             height=600,
             font=dict(size=12),
             title_font=dict(size=16),
-            hovermode='x unified'
+            hovermode='x unified',
+            xaxis=dict(fixedrange=True),
+            yaxis=dict(fixedrange=True)
         )
         
         return fig
@@ -729,7 +738,9 @@ def Generate_Regional_Employment_Heatmap(Data):
             height=600,
             template='ggplot2',
             font=dict(size=12),
-            title_font=dict(size=16)
+            title_font=dict(size=16),
+            xaxis=dict(fixedrange=True),
+            yaxis=dict(fixedrange=True)
         )
         
         return fig
@@ -830,6 +841,8 @@ def Generate_Employment_Trend_Summary(Data):
             font=dict(size=12),
             title_font=dict(size=16),
             hovermode='x unified',
+            xaxis=dict(fixedrange=True),
+            yaxis=dict(fixedrange=True),
             legend=dict(
                 orientation='h',
                 yanchor='bottom',
