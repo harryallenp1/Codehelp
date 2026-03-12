@@ -162,6 +162,48 @@ def Generate_NOC_Latest_ER_PCT(NOC_GroupingID):
         print(f"Generate_NOC_Latest_ER_PCT(NOC_Code={NOC_GroupingID}) => {e}")
         return {'data': [], 'layout': {'title': f'NOC Employment History for ERs Unavailable'}}
 
+
+def Generate_Occupation_Distribution(Program):
+    """Generate occupation category distribution visualization for a program."""
+    try:
+        df = DataUtils.Get_Program_Occupation_Data(ProgramID=Program)
+        
+        Distribution = GraphUtils.Generate_Occupation_Category_Distribution(Data=df)
+        
+        return Distribution
+    
+    except Exception as e:
+        print(f"Generate_Occupation_Distribution(Program={Program}) => {e}")
+        return {'data': [], 'layout': {'title': 'Occupation Distribution Unavailable'}}
+
+
+def Generate_Regional_Heatmap(NOC_GroupingID):
+    """Generate regional employment heatmap for an occupation."""
+    try:
+        df = DataUtils.Get_Latest_ER_NOC_PCT(NOC_GroupingID=NOC_GroupingID)
+        
+        Heatmap = GraphUtils.Generate_Regional_Employment_Heatmap(Data=df)
+        
+        return Heatmap
+    
+    except Exception as e:
+        print(f"Generate_Regional_Heatmap(NOC_Code={NOC_GroupingID}) => {e}")
+        return {'data': [], 'layout': {'title': 'Regional Heatmap Unavailable'}}
+
+
+def Generate_Employment_Summary(NOC_GroupingID):
+    """Generate employment trend summary for an occupation."""
+    try:
+        df = DataUtils.Get_NOC_Historical_Data(NOC_GroupingID=NOC_GroupingID)
+        
+        Summary = GraphUtils.Generate_Employment_Trend_Summary(Data=df)
+        
+        return Summary
+    
+    except Exception as e:
+        print(f"Generate_Employment_Summary(NOC_Code={NOC_GroupingID}) => {e}")
+        return {'data': [], 'layout': {'title': 'Employment Summary Unavailable'}}
+
 #endregion
 
 
@@ -173,7 +215,7 @@ def Generate_Forecast_Analysis(provinceid: int, noc_groupingid : int):
 
     df_All = DataUtils.Get_NOC_Forecast_All_Provinces(noc_groupingid=noc_groupingid)
 
-    print(f"All Province Data =>\{df_All}")
+    print(f"All Province Data => {df_All}")
 
     Col_Dict = {str(col): str(col) for col in df_All.columns}
     Tbl_Dict = DataTableUtils.Generate_Dash_Table(data=df_All, Col_Dict=Col_Dict)

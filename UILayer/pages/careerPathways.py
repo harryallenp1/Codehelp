@@ -2,7 +2,16 @@ from dash import dcc, html, callback ,Input, Output
 import dash 
 import dash_bootstrap_components as dbc
 
-from UILayer.DashAppUtilities import (Get_Program_Options, Get_NOC_Options, Generate_Program_Pathways, Generate_NOC_History_In_Ontario, Generate_NOC_Latest_ER_PCT)
+from UILayer.DashAppUtilities import (
+    Get_Program_Options, 
+    Get_NOC_Options, 
+    Generate_Program_Pathways, 
+    Generate_NOC_History_In_Ontario, 
+    Generate_NOC_Latest_ER_PCT,
+    Generate_Occupation_Distribution,
+    Generate_Regional_Heatmap,
+    Generate_Employment_Summary
+)
 
 dash.register_page(
     __name__,
@@ -88,6 +97,54 @@ layout = dbc.Container(
                     width=4
                 )
             ],
+            className="mb-4"
+        ),
+
+        # ---------- ADDITIONAL VISUALIZATIONS ROW ----------
+        dbc.Row(
+            [
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody(
+                            [
+                                html.H5("Occupation Distribution", className="mb-3"),
+                                dcc.Graph(id='Graph_Occupation_Distribution')
+                            ]
+                        ),
+                        className="shadow-sm h-100"
+                    ),
+                    width=6
+                ),
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody(
+                            [
+                                html.H5("Regional Employment Heatmap", className="mb-3"),
+                                dcc.Graph(id='Graph_Regional_Heatmap')
+                            ]
+                        ),
+                        className="shadow-sm h-100"
+                    ),
+                    width=6
+                )
+            ],
+            className="mb-4"
+        ),
+
+        # ---------- EMPLOYMENT SUMMARY ROW ----------
+        dbc.Row(
+            dbc.Col(
+                dbc.Card(
+                    dbc.CardBody(
+                        [
+                            html.H5("Employment Trend Summary", className="mb-3"),
+                            dcc.Graph(id='Graph_Employment_Summary')
+                        ]
+                    ),
+                    className="shadow-sm"
+                ),
+                width=12
+            ),
             className="mb-5"
         )
 
@@ -99,25 +156,31 @@ layout = dbc.Container(
 
 @callback(
     Output('Graph_ProgramMap','figure'),
+    Output('Graph_Occupation_Distribution','figure'),
     Input('Select_Program','value')
     
 )
 def Update_Program_Mapping(Program):
     if Program:
         Mapping = Generate_Program_Pathways(Program=Program)
-        return Mapping
+        Distribution = Generate_Occupation_Distribution(Program=Program)
+        return Mapping, Distribution
     else:
-        return dash.no_update 
+        return tuple([dash.no_update] * 2)
 
 @callback(
     Output('Graph_NOC_History','figure'),
     Output('Graph_NOC_ER_History','figure'),
+    Output('Graph_Regional_Heatmap','figure'),
+    Output('Graph_Employment_Summary','figure'),
     Input('Select_NOC','value'),
 )
 def Update_NOC_History(NOC_Code):
     if NOC_Code:
         NOC_History = Generate_NOC_History_In_Ontario(NOC_GroupingID=NOC_Code)
         NOC_ER_Stats = Generate_NOC_Latest_ER_PCT(NOC_GroupingID=NOC_Code)
-        return NOC_History, NOC_ER_Stats
+        Regional_Heatmap = Generate_Regional_Heatmap(NOC_GroupingID=NOC_Code)
+        Employment_Summary = Generate_Employment_Summary(NOC_GroupingID=NOC_Code)
+        return NOC_History, NOC_ER_Stats, Regional_Heatmap, Employment_Summary
     else:
-        return tuple([dash.no_update] * 2)
+        return tuple([dash.no_update] * 4)
