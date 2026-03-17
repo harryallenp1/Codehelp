@@ -5,7 +5,7 @@ from DataTransportationLayer.DataServiceAPI import DataService
 def Get_Program_Options():
     
     df = DataService.RequestProgramCategories()
-    df = df.loc[df['programcategoryid'].isin([3,4])]
+    df = df.loc[df['programcategoryid'].isin([3,4,9,10,11,12,13,14,15,16])]
     ProgramOptions = df.set_index('programcategoryid')['programcategory'].to_dict()
     return ProgramOptions 
 
