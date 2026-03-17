@@ -1,11 +1,49 @@
 #By: Tejas Kumar
 #Integrating Application Layer Utilities for usage. 
 
-from ApplicationLayer.LogicalOperations import DataUtils, GraphUtils, OptionsUtils, DataTableUtils
+from ApplicationLayer.LogicalOperations import DataUtils, GraphUtils, OptionsUtils, DataTableUtils, ReportGenerator
 import requests
 import pandas as pd
 
 print(f"Importing Dash App Utilities 2")
+
+#region Match Making Generator Functionalities
+MATCH_MAKING_API_URI = "http://localhost:8002/query/"
+
+def Send_Compentency_List(Metrics):
+    try:
+
+        user_input = [
+            Metrics["Numeracy"],
+            Metrics["Social Perceptiveness"],
+            Metrics["Negotiating"],
+            Metrics["Digital Literacy"],
+            Metrics["Persuading"],
+            Metrics["Evaluation"],
+            Metrics["Writing"],
+            Metrics["Instructing"],
+            Metrics["Active Listening"],
+            Metrics["Oral Expression"],
+            Metrics["Reading Comprehension"]
+        ]
+
+        payload = {
+            "compentency_list": user_input
+        }
+
+        response = requests.post(MATCH_MAKING_API_URI, json=payload)
+
+        response.raise_for_status()
+
+        data = response.json()
+        answer = data.get("answer", "I'm sorry, I couldn't get an answer at this time.")
+        return answer
+    
+    except Exception as e:
+        return "I could not provide any matches at this time."
+
+
+#endregion
 
 #region RAG LLM Functionalities
 RAG_API_URI = "http://localhost:8001/query/"
@@ -273,3 +311,19 @@ def Generate_Forecast_Analysis(provinceid: int, noc_groupingid : int):
 
 
 #endregion 
+
+
+#region Functions for sending saved json chat history to the report generation module for analysis and insights extraction.
+
+def Send_Chat_To_Report_Generator(Chat_History_Json: dict, reportName: str):
+
+    try:
+        
+        response = ReportGenerator.generate_report(chat_history_json=Chat_History_Json, reportName=reportName)
+        return response
+        
+    except Exception as e:
+        print(f"Error sending chat history to Report Generator => {e}")
+        return None
+
+#endregion

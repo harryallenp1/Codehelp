@@ -1,7 +1,6 @@
 from dash import dcc, html, callback ,Input, Output
 import dash 
 import dash_bootstrap_components as dbc
-
 from UILayer.DashAppUtilities import (
     Get_Program_Options, 
     Get_NOC_Options, 
@@ -155,7 +154,6 @@ def Update_Program_Mapping(Program):
         return Mapping, Distribution, STL_Decomposition
     else:
         return tuple([dash.no_update] * 3)
-
 @callback(
     Output('Graph_NOC_History','figure'),
     Output('Graph_NOC_ER_History','figure'),

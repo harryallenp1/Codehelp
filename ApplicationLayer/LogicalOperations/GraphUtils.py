@@ -115,22 +115,19 @@ def Generate_Program_to_Occupation_Mapping(Data):
             cmin=None,
             cmax=None
                 ),
-            hoverinfo='none',
-            hovertemplate=None
         )
 
         Mappings.update_layout(
              font=dict(
-        size=12,                
+        size=18,                
         ),
             title=dict(
-        font=dict(size=16),
+        font=dict(size=28),
         x=0.5
         ),
          hoverlabel=dict(
-                font_size=12 
+                font_size=20 
             ),
-            hovermode=False
 
         )
 
@@ -414,7 +411,6 @@ def Generate_Forecast_Graph(Data):
     except Exception as e:
         print(f"Generate_Forecast_Graph() => {e}")
         return {'data': [], 'layout': {'title': f'NOC Employment Forecast Unavailable'}}
-
 
 #endregion 
 
@@ -979,4 +975,5 @@ def Generate_STL_Decomposition(Data):
         print(f"Generate_STL_Decomposition() => {e}")
         return {'data': [], 'layout': {'title': 'STL Decomposition Unavailable'}}
 
+#endregion
 #endregion
