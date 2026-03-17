@@ -204,6 +204,20 @@ def Generate_Employment_Summary(NOC_GroupingID):
         print(f"Generate_Employment_Summary(NOC_Code={NOC_GroupingID}) => {e}")
         return {'data': [], 'layout': {'title': 'Employment Summary Unavailable'}}
 
+
+def Generate_STL_Decomposition_Chart(NOC_GroupingID):
+    """Generate STL decomposition chart for an occupation."""
+    try:
+        df = DataUtils.Get_NOC_Historical_Data(NOC_GroupingID=NOC_GroupingID)
+        
+        STL_Chart = GraphUtils.Generate_STL_Decomposition(Data=df)
+        
+        return STL_Chart
+    
+    except Exception as e:
+        print(f"Generate_STL_Decomposition_Chart(NOC_Code={NOC_GroupingID}) => {e}")
+        return {'data': [], 'layout': {'title': 'STL Decomposition Unavailable'}}
+
 #endregion
 
 

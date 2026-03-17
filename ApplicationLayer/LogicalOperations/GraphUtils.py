@@ -866,4 +866,117 @@ def Generate_Employment_Trend_Summary(Data):
         print(f"Generate_Employment_Trend_Summary() => {e}")
         return {'data': [], 'layout': {'title': 'Employment Trend Summary Unavailable'}}
 
+
+def Generate_STL_Decomposition(Data):
+    """
+    Create STL (Seasonal and Trend decomposition using Loess) visualization.
+    
+    Args:
+        Data: DataFrame with employment time series data
+    
+    Returns:
+        Plotly figure object with 4 subplots
+    """
+    try:
+        from statsmodels.tsa.seasonal import STL
+        import pandas as pd
+        
+        # Prepare the data for STL decomposition
+        ts_data = Data.copy()
+        ts_data['ds'] = pd.to_datetime(ts_data['ds'])
+        ts_data = ts_data.set_index('ds')
+        ts_data = ts_data['Employment (Persons in Thousands)'].dropna()
+        
+        # Perform STL decomposition
+        stl = STL(ts_data, seasonal=13)  # 13 for monthly data
+        result = stl.fit()
+        
+        # Create subplots
+        from plotly.subplots import make_subplots
+        fig = make_subplots(
+            rows=4, cols=1,
+            subplot_titles=('Employment Seasonally Unadjusted', 'Employment (Deseasonalized)', 'Trend', 'Seasonal'),
+            vertical_spacing=0.08,
+            shared_xaxes=True
+        )
+        
+        # Original data (Seasonally Unadjusted)
+        fig.add_trace(
+            go.Scatter(
+                x=result.observed.index,
+                y=result.observed.values,
+                mode='lines',
+                name='Original',
+                line=dict(color='#FF6B6B', width=2),
+                hoverinfo='none'
+            ),
+            row=1, col=1
+        )
+        
+        # Deseasonalized (Original - Seasonal)
+        deseasonalized = result.observed - result.seasonal
+        fig.add_trace(
+            go.Scatter(
+                x=deseasonalized.index,
+                y=deseasonalized.values,
+                mode='lines',
+                name='Deseasonalized',
+                line=dict(color='#95D5B2', width=2),
+                hoverinfo='none'
+            ),
+            row=2, col=1
+        )
+        
+        # Trend
+        fig.add_trace(
+            go.Scatter(
+                x=result.trend.index,
+                y=result.trend.values,
+                mode='lines',
+                name='Trend',
+                line=dict(color='#74C69D', width=2),
+                hoverinfo='none'
+            ),
+            row=3, col=1
+        )
+        
+        # Seasonal
+        fig.add_trace(
+            go.Scatter(
+                x=result.seasonal.index,
+                y=result.seasonal.values,
+                mode='lines',
+                name='Seasonal',
+                line=dict(color='#52B788', width=2),
+                hoverinfo='none'
+            ),
+            row=4, col=1
+        )
+        
+        # Update layout
+        fig.update_layout(
+            title='STL Decomposition',
+            height=800,
+            showlegend=False,
+            font=dict(size=12),
+            title_font=dict(size=16),
+            hovermode=False
+        )
+        
+        # Update x-axes
+        fig.update_xaxes(fixedrange=True)
+        fig.update_yaxes(fixedrange=True)
+        
+        # Update subplot titles
+        for i in range(1, 5):
+            fig.update_yaxes(title_text="Employment (Thousands)", row=i, col=1)
+        
+        fig.update_xaxes(title_text="Date", row=4, col=1)
+        
+        return fig
+    
+    except Exception as e:
+        print(f"Generate_STL_Decomposition() => {e}")
+        return {'data': [], 'layout': {'title': 'STL Decomposition Unavailable'}}
+
 #endregion

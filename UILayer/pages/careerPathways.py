@@ -10,7 +10,8 @@ from UILayer.DashAppUtilities import (
     Generate_NOC_Latest_ER_PCT,
     Generate_Occupation_Distribution,
     Generate_Regional_Heatmap,
-    Generate_Employment_Summary
+    Generate_Employment_Summary,
+    Generate_STL_Decomposition_Chart
 )
 
 dash.register_page(
@@ -145,6 +146,23 @@ layout = dbc.Container(
                 ),
                 width=12
             ),
+            className="mb-4"
+        ),
+
+        # ---------- STL DECOMPOSITION ROW ----------
+        dbc.Row(
+            dbc.Col(
+                dbc.Card(
+                    dbc.CardBody(
+                        [
+                            html.H5("STL Decomposition Analysis", className="mb-3"),
+                            dcc.Graph(id='Graph_STL_Decomposition')
+                        ]
+                    ),
+                    className="shadow-sm"
+                ),
+                width=12
+            ),
             className="mb-5"
         )
 
@@ -173,6 +191,7 @@ def Update_Program_Mapping(Program):
     Output('Graph_NOC_ER_History','figure'),
     Output('Graph_Regional_Heatmap','figure'),
     Output('Graph_Employment_Summary','figure'),
+    Output('Graph_STL_Decomposition','figure'),
     Input('Select_NOC','value'),
 )
 def Update_NOC_History(NOC_Code):
@@ -181,6 +200,7 @@ def Update_NOC_History(NOC_Code):
         NOC_ER_Stats = Generate_NOC_Latest_ER_PCT(NOC_GroupingID=NOC_Code)
         Regional_Heatmap = Generate_Regional_Heatmap(NOC_GroupingID=NOC_Code)
         Employment_Summary = Generate_Employment_Summary(NOC_GroupingID=NOC_Code)
-        return NOC_History, NOC_ER_Stats, Regional_Heatmap, Employment_Summary
+        STL_Decomposition = Generate_STL_Decomposition_Chart(NOC_GroupingID=NOC_Code)
+        return NOC_History, NOC_ER_Stats, Regional_Heatmap, Employment_Summary, STL_Decomposition
     else:
-        return tuple([dash.no_update] * 4)
+        return tuple([dash.no_update] * 5)
