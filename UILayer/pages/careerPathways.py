@@ -9,7 +9,8 @@ from UILayer.DashAppUtilities import (
     Generate_NOC_History_In_Ontario, 
     Generate_NOC_Latest_ER_PCT,
     Generate_Occupation_Distribution,
-    Generate_STL_Decomposition_Chart
+    Generate_STL_Decomposition_Chart,
+    Generate_Program_STL_Decomposition
 )
 
 dash.register_page(
@@ -142,6 +143,7 @@ layout = dbc.Container(
 @callback(
     Output('Graph_ProgramMap','figure'),
     Output('Graph_Occupation_Distribution','figure'),
+    Output('Graph_STL_Decomposition','figure'),
     Input('Select_Program','value')
     
 )
@@ -149,21 +151,20 @@ def Update_Program_Mapping(Program):
     if Program:
         Mapping = Generate_Program_Pathways(Program=Program)
         Distribution = Generate_Occupation_Distribution(Program=Program)
-        return Mapping, Distribution
+        STL_Decomposition = Generate_Program_STL_Decomposition(ProgramID=Program)
+        return Mapping, Distribution, STL_Decomposition
     else:
-        return tuple([dash.no_update] * 2)
+        return tuple([dash.no_update] * 3)
 
 @callback(
     Output('Graph_NOC_History','figure'),
     Output('Graph_NOC_ER_History','figure'),
-    Output('Graph_STL_Decomposition','figure'),
     Input('Select_NOC','value'),
 )
 def Update_NOC_History(NOC_Code):
     if NOC_Code:
         NOC_History = Generate_NOC_History_In_Ontario(NOC_GroupingID=NOC_Code)
         NOC_ER_Stats = Generate_NOC_Latest_ER_PCT(NOC_GroupingID=NOC_Code)
-        STL_Decomposition = Generate_STL_Decomposition_Chart(NOC_GroupingID=NOC_Code)
-        return NOC_History, NOC_ER_Stats, STL_Decomposition
+        return NOC_History, NOC_ER_Stats
     else:
-        return tuple([dash.no_update] * 3)
+        return tuple([dash.no_update] * 2)

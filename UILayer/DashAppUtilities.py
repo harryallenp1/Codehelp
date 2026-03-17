@@ -218,6 +218,34 @@ def Generate_STL_Decomposition_Chart(NOC_GroupingID):
         print(f"Generate_STL_Decomposition_Chart(NOC_Code={NOC_GroupingID}) => {e}")
         return {'data': [], 'layout': {'title': 'STL Decomposition Unavailable'}}
 
+
+def Generate_Program_STL_Decomposition(ProgramID):
+    """Generate STL decomposition chart for program-specific occupations."""
+    try:
+        # For now, map programs to available NOC groupings
+        # This is a simplified mapping - in production you'd want more sophisticated mapping
+        program_to_noc_mapping = {
+            9: 21,   # Food Science & Nutrition -> Professional occupations in natural and applied sciences
+            10: 21,  # Forestry -> Professional occupations in natural and applied sciences  
+            11: 31,  # Other Health Professions -> Professional occupations in health
+            12: 51,  # Humanities -> Professional occupations in art and culture
+            13: 51,  # Journalism -> Professional occupations in art and culture
+            14: 31,  # Kinesiology -> Professional occupations in health
+            15: 41,  # Law -> Professional occupations in law and social services
+            16: 21   # Mathematics -> Professional occupations in natural and applied sciences
+        }
+        
+        noc_grouping_id = program_to_noc_mapping.get(ProgramID, 21)  # Default to 21
+        df = DataUtils.Get_NOC_Historical_Data(NOC_GroupingID=noc_grouping_id)
+        
+        STL_Chart = GraphUtils.Generate_STL_Decomposition(Data=df)
+        
+        return STL_Chart
+    
+    except Exception as e:
+        print(f"Generate_Program_STL_Decomposition(ProgramID={ProgramID}) => {e}")
+        return {'data': [], 'layout': {'title': 'STL Decomposition Unavailable'}}
+
 #endregion
 
 
