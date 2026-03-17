@@ -1,0 +1,14 @@
+{
+  "P10_N1": {
+    "n_changepoints": 11,
+    "learning_rate": 0.017722516438477984,
+    "yearly_seasonality": true,
+    "epochs": 50
+  },
+  "P10_N10": {
+    "n_changepoints": 6,
+    "learning_rate": 0.06352840700351604,
+    "yearly_seasonality": true,
+    "epochs": 50
+  }
+}

@@ -1,5 +1,3 @@
-# Abira Esther Demello
-
 from MachineLearningLayer.Utils.Evaluation import Evaluater
 import pandas as pd
 import polars as pl

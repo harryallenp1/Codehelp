@@ -1,5 +1,3 @@
-# Abira Esther Demello
-
 from MachineLearningLayer.Utils.Tuning import Tuner
 from MachineLearningLayer.Utils.Splitter import Splitter
 import pandas as pd

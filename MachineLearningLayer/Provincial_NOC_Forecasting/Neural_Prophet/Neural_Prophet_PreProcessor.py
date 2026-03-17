@@ -1,5 +1,3 @@
-# Abira Esther Demello
-
 from MachineLearningLayer import DataService
 from MachineLearningLayer.Utils.PreProcessing import PreProcessesor
 

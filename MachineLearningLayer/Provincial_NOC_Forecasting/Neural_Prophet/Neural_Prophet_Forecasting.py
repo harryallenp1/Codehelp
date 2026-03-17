@@ -1,5 +1,3 @@
-# Abira Esther Demello
-
 from MachineLearningLayer.Utils.Forecast import Forecaster
 from MachineLearningLayer.Utils.Splitter import Splitter
 from DataTransportationLayer.DataServiceAPI import DataService
