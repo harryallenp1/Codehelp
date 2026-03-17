@@ -9,8 +9,6 @@ from UILayer.DashAppUtilities import (
     Generate_NOC_History_In_Ontario, 
     Generate_NOC_Latest_ER_PCT,
     Generate_Occupation_Distribution,
-    Generate_Regional_Heatmap,
-    Generate_Employment_Summary,
     Generate_STL_Decomposition_Chart
 )
 
@@ -101,45 +99,14 @@ layout = dbc.Container(
             className="mb-4"
         ),
 
-        # ---------- ADDITIONAL VISUALIZATIONS ROW ----------
-        dbc.Row(
-            [
-                dbc.Col(
-                    dbc.Card(
-                        dbc.CardBody(
-                            [
-                                html.H5("Occupation Distribution", className="mb-3"),
-                                dcc.Graph(id='Graph_Occupation_Distribution')
-                            ]
-                        ),
-                        className="shadow-sm h-100"
-                    ),
-                    width=6
-                ),
-                dbc.Col(
-                    dbc.Card(
-                        dbc.CardBody(
-                            [
-                                html.H5("Regional Employment Heatmap", className="mb-3"),
-                                dcc.Graph(id='Graph_Regional_Heatmap')
-                            ]
-                        ),
-                        className="shadow-sm h-100"
-                    ),
-                    width=6
-                )
-            ],
-            className="mb-4"
-        ),
-
-        # ---------- EMPLOYMENT SUMMARY ROW ----------
+        # ---------- OCCUPATION DISTRIBUTION ROW ----------
         dbc.Row(
             dbc.Col(
                 dbc.Card(
                     dbc.CardBody(
                         [
-                            html.H5("Employment Trend Summary", className="mb-3"),
-                            dcc.Graph(id='Graph_Employment_Summary')
+                            html.H5("Occupation Distribution", className="mb-3"),
+                            dcc.Graph(id='Graph_Occupation_Distribution')
                         ]
                     ),
                     className="shadow-sm"
@@ -189,8 +156,6 @@ def Update_Program_Mapping(Program):
 @callback(
     Output('Graph_NOC_History','figure'),
     Output('Graph_NOC_ER_History','figure'),
-    Output('Graph_Regional_Heatmap','figure'),
-    Output('Graph_Employment_Summary','figure'),
     Output('Graph_STL_Decomposition','figure'),
     Input('Select_NOC','value'),
 )
@@ -198,9 +163,7 @@ def Update_NOC_History(NOC_Code):
     if NOC_Code:
         NOC_History = Generate_NOC_History_In_Ontario(NOC_GroupingID=NOC_Code)
         NOC_ER_Stats = Generate_NOC_Latest_ER_PCT(NOC_GroupingID=NOC_Code)
-        Regional_Heatmap = Generate_Regional_Heatmap(NOC_GroupingID=NOC_Code)
-        Employment_Summary = Generate_Employment_Summary(NOC_GroupingID=NOC_Code)
         STL_Decomposition = Generate_STL_Decomposition_Chart(NOC_GroupingID=NOC_Code)
-        return NOC_History, NOC_ER_Stats, Regional_Heatmap, Employment_Summary, STL_Decomposition
+        return NOC_History, NOC_ER_Stats, STL_Decomposition
     else:
-        return tuple([dash.no_update] * 5)
+        return tuple([dash.no_update] * 3)
